@@ -1,0 +1,13 @@
+/**
+ * Created by YuKai Fan on 2019/12/20
+ */
+module.exports = {
+  apiUrl: {
+    //  本地环境接口请求地址
+    dev: 'http://127.0.0.1:8769',
+    //  生产环境接口请求地址
+    pro: ''
+  },
+
+  INDEX_PAGE: 'index'
+};
