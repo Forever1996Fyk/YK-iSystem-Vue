@@ -3,10 +3,27 @@
  */
 import request from '@/utils/request'
 
-export function getDBTables(query) {
+/**
+ * 获取所有数据库表
+ * @param data
+ * @returns {*}
+ */
+export function getDBTables(data) {
   return request({
     url: '/generate/api/generate/getDBTables',
     method: 'get',
-    params: query
+    params: data
+  })
+}
+
+/**
+ * 代码生生成
+ * @param data tableName
+ * @returns {*}
+ */
+export function generateCode(data) {
+  return request({
+    url: '/generate/api/generate/generateCode/' + data,
+    method: 'post'
   })
 }
