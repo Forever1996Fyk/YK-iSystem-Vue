@@ -31,7 +31,7 @@
       highlight-current-row
       style="width: 100%;"
     >
-      <el-table-column type="selection" width="55"/>
+      <el-table-column type="selection" width="55" />
       <el-table-column v-if="false" prop="id">
         <template slot-scope="{row}">
           <span>{{ row.id }}</span>
@@ -70,62 +70,63 @@
 </template>
 
 <script>
-    import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-    import waves from '@/directive/waves'
-    import {getDBTables, generateCode} from '@/api/generater'
+import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import waves from '@/directive/waves'
+import { getDBTables } from '@/api/generater'
+import config from '@/config'
 
-    export default {
-        name: 'GenCode',
-        components: {Pagination},
-        directives: {waves},
-        data() {
-            return {
-                list: null,
-                total: 0,
-                listLoading: true,
-                listQuery: {
-                    start: 1,
-                    pageSize: 20,
-                    tableName: null
-                }
-            }
-        },
-        created() {
-            this.getList()
-        },
-        methods: {
-            getList() {
-                this.listLoading = true
-                getDBTables(this.listQuery).then(res => {
-                    console.log(res)
-                    this.list = res.data.data
-                    this.total = res.data.total
-
-                    // Just to simulate the time of the request
-                    setTimeout(() => {
-                        this.listLoading = false
-                    }, 1.5 * 1000)
-                })
-            },
-            handleFilter() {
-                this.listQuery.page = 1
-                this.getList()
-            },
-            handleGenerate() {
-                var datas = this.$refs.multipleTable.selection;
-                var tableNames = [];
-                if (datas.length === 0) {
-                    this.$message.error('请选择至少一条数据');
-                    return;
-                }
-                for (var i = 0; i < datas.length; i++) {
-                    tableNames.push(datas[i].id);
-                }
-                generateCode(tableNames).then({
-
-                })
-
-            }
-        }
+export default {
+  name: 'GenCode',
+  components: { Pagination },
+  directives: { waves },
+  data() {
+    return {
+      list: null,
+      total: 0,
+      listLoading: true,
+      listQuery: {
+        start: 1,
+        pageSize: 20,
+        tableName: null
+      }
     }
+  },
+  created() {
+    this.getList()
+  },
+  methods: {
+    getList() {
+      this.listLoading = true
+      getDBTables(this.listQuery).then(res => {
+        console.log(res)
+        this.list = res.data.data
+        this.total = res.data.total
+
+        // Just to simulate the time of the request
+        setTimeout(() => {
+          this.listLoading = false
+        }, 1.5 * 1000)
+      })
+    },
+    handleFilter() {
+      this.listQuery.page = 1
+      this.getList()
+    },
+    handleGenerate() {
+      var datas = this.$refs.multipleTable.selection
+      console.log(datas)
+      var tableNames = []
+      if (datas.length === 0) {
+        this.$message.error('请选择至少一条数据')
+        return
+      }
+      for (var i = 0; i < datas.length; i++) {
+        tableNames.push(datas[i].tableName)
+      }
+      console.log(tableNames)
+      var url = config.apiUrl.dev + '/generate/api/generate/generateCode/' + tableNames
+      window.open(url, '_blank')
+    }
+  }
+}
 </script>
