@@ -143,6 +143,15 @@ export const asyncRoutes = [
           title: 'genCode',
           roles: ['admin']
         }
+      },
+      {
+        path: 'gateway',
+        component: () => import('@/views/systemManage/gateway'),
+        name: 'gateway',
+        meta: {
+          title: 'gateway',
+          roles: ['admin']
+        }
       }
     ]
   }

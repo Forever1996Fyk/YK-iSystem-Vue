@@ -15,15 +15,3 @@ export function getDBTables(data) {
     params: data
   })
 }
-
-/**
- * 代码生生成
- * @param data tableName
- * @returns {*}
- */
-export function generateCode(data) {
-  return request({
-    url: '/generate/api/generate/generateCode/' + data,
-    method: 'post'
-  })
-}

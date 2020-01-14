@@ -4,7 +4,8 @@ export default {
     documentation: '文档',
     guide: '引导页',
     SystemManage: '系统管理',
-    genCode: '代码生成'
+    genCode: '代码生成',
+    gateway: '路由网关'
     // permission: '权限测试页',
     // rolePermission: '角色权限',
     // pagePermission: '页面权限',
@@ -111,22 +112,15 @@ export default {
     imageUploadTips: '由于我在使用时它只有vue@1版本，而且和mockjs不兼容，所以自己改造了一下，如果大家要使用的话，优先还是使用官方版本。'
   },
   table: {
-    dynamicTips1: '固定表头, 按照表头顺序排序',
-    dynamicTips2: '不固定表头, 按照点击顺序排序',
-    dragTips1: '默认顺序',
-    dragTips2: '拖拽后顺序',
     title: '标题',
     importance: '重要性',
     type: '类型',
-    remark: '点评',
+    remark: '备注',
     search: '搜索',
     add: '添加',
     export: '导出',
-    reviewer: '审核人',
     id: '序号',
-    date: '时间',
     author: '作者',
-    readings: '阅读数',
     status: '状态',
     actions: '操作',
     edit: '编辑',
@@ -136,7 +130,14 @@ export default {
     cancel: '取 消',
     confirm: '确 定',
     tableName: '表名称',
-    generate: '生成代码'
+    generate: '生成代码',
+    routeName: '路由名称',
+    routeDesc: '路由描述',
+    path: '路径',
+    serviceId: '服务id',
+    stripPrefix: '是否忽略前缀',
+    persist: '是否保留数据',
+    retryable: '是否重试'
   },
   example: {
     warning: '创建和编辑页面是不能被 keep-alive 缓存的，因为keep-alive 的 include 目前不支持根据路由来缓存，所以目前都是基于 component name 来进行缓存的。如果你想类似的实现缓存效果，可以使用 localStorage 等浏览器缓存方案。或者不要使用 keep-alive 的 include，直接缓存所有页面。详情见'
