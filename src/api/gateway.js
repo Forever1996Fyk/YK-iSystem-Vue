@@ -10,7 +10,7 @@ import request from '@/utils/request'
  */
 export function addGatewayRoute(data) {
   return request({
-    url: '/gatewayRoute/api/gatewayRoute/addGatewayRoute',
+    url: '/system/api/gatewayRoute/addGatewayRoute',
     method: 'post',
     data
   })
@@ -48,7 +48,7 @@ export function editGatewayRoute(data) {
 export function delGatewayRoute(id) {
   return request({
     url: '/system/api/gatewayRoute/delGatewayRoute',
-    method: 'get',
+    method: 'delete',
     params: { id }
   })
 }
@@ -60,7 +60,7 @@ export function delGatewayRoute(id) {
 export function delGatewayRouteByIds(ids) {
   return request({
     url: '/system/api/gatewayRoute/delGatewayRoute/' + ids,
-    method: 'get'
+    method: 'delete'
   })
 }
 

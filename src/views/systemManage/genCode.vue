@@ -113,7 +113,7 @@ export default {
       this.getList()
     },
     handleGenerate() {
-      var datas = this.$refs.multipleTable.selection
+      var datas = this.$refs.multipleTable.selection;
       console.log(datas)
       var tableNames = []
       if (datas.length === 0) {

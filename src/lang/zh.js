@@ -135,9 +135,9 @@ export default {
     routeDesc: '路由描述',
     path: '路径',
     serviceId: '服务id',
-    stripPrefix: '是否忽略前缀',
-    persist: '是否保留数据',
-    retryable: '是否重试'
+    stripPrefix: '忽略前缀',
+    persist: '保留数据',
+    retryable: '重试'
   },
   example: {
     warning: '创建和编辑页面是不能被 keep-alive 缓存的，因为keep-alive 的 include 目前不支持根据路由来缓存，所以目前都是基于 component name 来进行缓存的。如果你想类似的实现缓存效果，可以使用 localStorage 等浏览器缓存方案。或者不要使用 keep-alive 的 include，直接缓存所有页面。详情见'
