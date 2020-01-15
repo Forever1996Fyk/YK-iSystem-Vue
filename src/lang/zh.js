@@ -5,7 +5,8 @@ export default {
     guide: '引导页',
     SystemManage: '系统管理',
     genCode: '代码生成',
-    gateway: '路由网关'
+    gateway: '路由网关',
+    systemApi: '系统api'
     // permission: '权限测试页',
     // rolePermission: '角色权限',
     // pagePermission: '页面权限',
@@ -137,7 +138,17 @@ export default {
     serviceId: '服务id',
     stripPrefix: '忽略前缀',
     persist: '保留数据',
-    retryable: '重试'
+    retryable: '重试',
+    apiCode: '接口编码',
+    apiName: '接口名称',
+    apiCategory: '接口分类',
+    apiDesc: '接口描述',
+    requestMethod: '请求方式',
+    contentType: '响应类型',
+    className: '类名',
+    methodName: '方法名',
+    auth: '是否认证',
+    open: '是否开放'
   },
   example: {
     warning: '创建和编辑页面是不能被 keep-alive 缓存的，因为keep-alive 的 include 目前不支持根据路由来缓存，所以目前都是基于 component name 来进行缓存的。如果你想类似的实现缓存效果，可以使用 localStorage 等浏览器缓存方案。或者不要使用 keep-alive 的 include，直接缓存所有页面。详情见'

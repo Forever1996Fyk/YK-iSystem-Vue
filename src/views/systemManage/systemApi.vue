@@ -2,8 +2,8 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input
-        v-model="listQuery.routeName"
-        :placeholder="$t('table.routeName')"
+        v-model="listQuery.title"
+        :placeholder="$t('table.title')"
         style="width: 200px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
@@ -30,10 +30,27 @@
       >
         {{ $t('table.delete') }}
       </el-button>
+
+      <el-checkbox v-model="showApiDesc" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">
+        {{ $t('table.apiDesc') }}
+      </el-checkbox>
+
+      <el-checkbox v-model="showClassName" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">
+        {{ $t('table.className') }}
+      </el-checkbox>
+
+      <el-checkbox v-model="showMethodName" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">
+        {{ $t('table.methodName') }}
+      </el-checkbox>
+
+      <el-checkbox v-model="showContentType" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">
+        {{ $t('table.contentType') }}
+      </el-checkbox>
     </div>
 
     <el-table
       ref="multipleTable"
+      :key="tableKey"
       v-loading="listLoading"
       :data="list"
       border
@@ -42,12 +59,47 @@
       style="width: 100%;"
     >
       <el-table-column type="selection" width="55" />
-      <el-table-column :label="$t('table.routeName')" align="center">
+      <el-table-column :label="$t('table.apiCode')" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.routeName }}</span>
+          <span>{{ row.apiCode }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.path')">
+      <el-table-column :label="$t('table.apiName')" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.apiName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('table.apiCategory')" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.apiCategory }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="showApiDesc" :label="$t('table.apiDesc')" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.apiDesc }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('table.requestMethod')" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.requestMethod }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="showContentType" :label="$t('table.contentType')" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.contentType }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="showClassName" :label="$t('table.className')" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.className }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="showMethodName" :label="$t('table.methodName')" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.methodName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('table.path')" align="center">
         <template slot-scope="{row}">
           <span>{{ row.path }}</span>
         </template>
@@ -57,27 +109,22 @@
           <span>{{ row.serviceId }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.routeDesc')" align="center">
-        <template slot-scope="{row}">
-          {{ row.routeDesc }}
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('table.stripPrefix')" align="center">
-        <template slot-scope="{row}">
-          {{ row.stripPrefix | whetherFilter }}
-        </template>
-      </el-table-column>
       <el-table-column :label="$t('table.persist')" align="center">
         <template slot-scope="{row}">
-          {{ row.persist | whetherFilter }}
+          <span>{{ row.persist | whetherFilter }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.retryable')" align="center">
+      <el-table-column :label="$t('table.auth')" align="center">
         <template slot-scope="{row}">
-          {{ row.retryable | whetherFilter }}
+          <span>{{ row.auth | whetherFilter }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.actions')" align="center" class-name="small-padding fixed-width">
+      <el-table-column :label="$t('table.open')" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.open | whetherFilter }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column fixed="right" :label="$t('table.actions')" align="center" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             {{ $t('table.edit') }}
@@ -102,55 +149,88 @@
       <el-form ref="dataForm" :rules="rules" :model="formData" label-width="100px">
         <el-row>
           <el-col :span="12">
-            <el-form-item :label="$t('table.routeName')" prop="routeName">
-              <el-input v-model="formData.routeName" />
+            <el-form-item :label="$t('table.apiCode')" prop="apiCode">
+              <el-input v-model="formData.apiCode" />
             </el-form-item>
           </el-col>
+
           <el-col :span="12">
-            <el-form-item :label="$t('table.path')" prop="path">
-              <el-input v-model="formData.path" />
+            <el-form-item :label="$t('table.apiName')" prop="apiName">
+              <el-input v-model="formData.apiName" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="8">
-            <el-form-item :label="$t('table.stripPrefix')" prop="stripPrefix">
-              <el-select
-                v-model="formData.stripPrefix"
-                class="filter-item"
-                placeholder="Please select"
-                style="width:100%"
-              >
-                <el-option v-for="item in whetherOptions" :key="item.key" :label="item.value" :value="item.key" />
-              </el-select>
+          <el-col :span="6">
+            <el-form-item :label="$t('table.apiCategory')" prop="apiCategory">
+              <el-input v-model="formData.apiCategory" />
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="6">
             <el-form-item :label="$t('table.persist')" prop="persist">
               <el-select v-model="formData.persist" class="filter-item" placeholder="Please select" style="width:100%">
                 <el-option v-for="item in whetherOptions" :key="item.key" :label="item.value" :value="item.key" />
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
-            <el-form-item :label="$t('table.retryable')" prop="retryable">
-              <el-select
-                v-model="formData.retryable"
-                class="filter-item"
-                placeholder="Please select"
-                style="width:100%"
-              >
+          <el-col :span="6">
+            <el-form-item :label="$t('table.auth')" prop="auth">
+              <el-select v-model="formData.auth" class="filter-item" placeholder="Please select" style="width:100%">
+                <el-option v-for="item in whetherOptions" :key="item.key" :label="item.value" :value="item.key" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item :label="$t('table.open')" prop="open">
+              <el-select v-model="formData.open" class="filter-item" placeholder="Please select" style="width:100%">
                 <el-option v-for="item in whetherOptions" :key="item.key" :label="item.value" :value="item.key" />
               </el-select>
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item :label="$t('table.requestMethod')" prop="requestMethod">
+              <el-input v-model="formData.requestMethod" />
+            </el-form-item>
+          </el-col>
 
+          <el-col :span="12">
+            <el-form-item :label="$t('table.contentType')" prop="contentType">
+              <el-input v-model="formData.contentType" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item :label="$t('table.className')" prop="className">
+              <el-input v-model="formData.className" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item :label="$t('table.methodName')" prop="methodName">
+              <el-input v-model="formData.methodName" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item :label="$t('table.path')" prop="path">
+              <el-input v-model="formData.path" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item :label="$t('table.serviceId')" prop="serviceId">
+              <el-input v-model="formData.serviceId" />
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-row>
           <el-col :span="24">
-            <el-form-item :label="$t('table.routeDesc')" prop="routeDesc">
+            <el-form-item :label="$t('table.apiDesc')" prop="apiDesc">
               <el-input
-                v-model="formData.routeDesc"
+                v-model="formData.apiDesc"
                 :autosize="{ minRows: 4, maxRows: 8}"
                 type="textarea"
                 placeholder="Please input"
@@ -175,16 +255,16 @@
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import waves from '@/directive/waves'
 import {
-  addGatewayRoute,
-  editGatewayRoute,
-  delGatewayRoute,
-  delGatewayRouteByIds,
-  getGatewayRoutes
-} from '@/api/gatewayRoute'
+  addSystemApi,
+  editSystemApi,
+  delSystemApi,
+  delSystemApiByIds,
+  getSystemApis
+} from '@/api/systemApi'
 import baseData from '@/config/baseData'
 
 export default {
-  name: 'GateWay',
+  name: 'SystemApi',
   components: { Pagination },
   directives: { waves },
   filters: {
@@ -198,22 +278,34 @@ export default {
   },
   data() {
     return {
+      tableKey: 0,
+      showMethodName: false,
+      showClassName: false,
+      showContentType: false,
+      showApiDesc: false,
       list: null,
       total: 0,
       listLoading: true,
       listQuery: {
         start: 1,
         pageSize: 20,
-        routeName: null
+        title: null
       },
       formData: {
         id: '',
-        routeName: '',
-        path: '',
-        stripPrefix: 0,
-        persist: 0,
-        retryable: 0,
-        routeDesc: ''
+        apiCode: null,
+        apiName: null,
+        apiCategory: null,
+        apiDesc: null,
+        requestMethod: null,
+        contentType: null,
+        className: null,
+        methodName: null,
+        path: null,
+        serviceId: null,
+        persist: 1,
+        auth: 1,
+        open: 1
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -223,9 +315,7 @@ export default {
       },
       whetherOptions: baseData.whetherOptions,
       rules: {
-        routeName: [{ required: true, message: '路由名称必填', trigger: 'change' }],
-        path: [{ required: true, message: '路径必填', trigger: 'change' }],
-        routeDesc: [{ required: true, message: '路由描述必填', trigger: 'change' }]
+        attrName: [{ required: true, message: '必填', trigger: 'change' }]
       }
     }
   },
@@ -235,7 +325,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      getGatewayRoutes(this.listQuery).then(res => {
+      getSystemApis(this.listQuery).then(res => {
         console.log(res)
         this.list = res.data.data
         this.total = res.data.total
@@ -253,12 +343,19 @@ export default {
     resetTemp() {
       this.formData = {
         id: '',
-        routeName: '',
-        path: '',
-        stripPrefix: 1,
-        persist: 0,
-        retryable: 0,
-        routeDesc: ''
+        apiCode: null,
+        apiName: null,
+        apiCategory: null,
+        apiDesc: null,
+        requestMethod: null,
+        contentType: null,
+        className: null,
+        methodName: null,
+        path: null,
+        serviceId: null,
+        persist: 1,
+        auth: 1,
+        open: 1
       }
     },
     handleCreate() {
@@ -281,7 +378,7 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           console.log(this.formData)
-          addGatewayRoute(this.formData).then((res) => {
+          addSystemApi(this.formData).then((res) => {
             this.$message.success(res.message)
             this.getList()
             this.dialogFormVisible = false
@@ -293,7 +390,7 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           console.log(this.formData)
-          editGatewayRoute(this.formData).then((res) => {
+          editSystemApi(this.formData).then((res) => {
             console.log(res)
             this.$message.success(res.message)
             this.getList()
@@ -309,12 +406,12 @@ export default {
         type: 'warning'
       }).then(() => {
         if (data instanceof Array) {
-          delGatewayRouteByIds(data).then((res) => {
+          delSystemApiByIds(data).then((res) => {
             this.getList()
             this.$message.success(res.message)
           })
         } else {
-          delGatewayRoute(data).then((res) => {
+          delSystemApi(data).then((res) => {
             this.getList()
             this.$message.success(res.message)
           })
