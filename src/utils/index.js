@@ -345,3 +345,21 @@ export function removeClass(ele, cls) {
     ele.className = ele.className.replace(reg, ' ')
   }
 }
+
+/**
+ * 在对象数组中获取对应的参数数组
+ * 例如: array: [{id: 1, name: a}, {id: 2, name: b}], param: id => arrayNew: [{id: 1}, {id: 2}]
+ * @param array
+ */
+export function getArrayInObjectArray(array, param) {
+  var arrayNew = [];
+  if (array instanceof Array) {
+    switch (param) {
+      case 'id':
+        for (var i = 0; i < array.length; i++) {
+          arrayNew.push(array[i].id);
+        }
+        return arrayNew;
+    }
+  }
+}

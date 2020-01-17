@@ -32,6 +32,10 @@
       </el-button>
     </div>
 
+    <el-alert
+      title="谨慎添加, 修改或删除路由, 如果修改不当, 将影响正常访问!"
+      type="warning" style="width: 100%;" :closable="false">
+    </el-alert>
     <el-table
       ref="multipleTable"
       v-loading="listLoading"

@@ -124,7 +124,7 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
   {
-    path: '/systemManagement',
+    path: '/systemManage',
     component: Layout,
     redirect: '/systemManage/genCode',
     alwaysShow: true,
@@ -159,6 +159,47 @@ export const asyncRoutes = [
         name: 'systemApi',
         meta: {
           title: 'systemApi',
+          roles: ['admin']
+        }
+      }
+    ]
+  },
+  {
+    path: '/userManage',
+    component: Layout,
+    redirect: '/userManage/systemUser',
+    alwaysShow: true,
+    name: 'UserManage',
+    meta: {
+      title: 'UserManage',
+      icon: 'user',
+      roles: ['admin']
+    },
+    children: [
+      {
+        path: 'systemUser',
+        component: () => import('@/views/userManage/systemUser'),
+        name: 'systemUser',
+        meta: {
+          title: 'systemUser',
+          roles: ['admin']
+        }
+      },
+      {
+        path: 'systemRole',
+        component: () => import('@/views/userManage/systemRole'),
+        name: 'systemRole',
+        meta: {
+          title: 'systemRole',
+          roles: ['admin']
+        }
+      },
+      {
+        path: 'systemAuthority',
+        component: () => import('@/views/userManage/systemAuthority'),
+        name: 'systemAuthority',
+        meta: {
+          title: 'systemAuthority',
           roles: ['admin']
         }
       }
