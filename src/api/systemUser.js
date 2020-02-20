@@ -89,3 +89,16 @@ export function getSystemUsers(data) {
     params: data
   })
 }
+
+/**
+ * 分配角色
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function assignRole(data) {
+  return request({
+    url: '/admin/api/systemUser/assignRole',
+    method: 'post',
+    params: data
+  })
+}

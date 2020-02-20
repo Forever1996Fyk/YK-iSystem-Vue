@@ -202,6 +202,15 @@ export const asyncRoutes = [
           title: 'systemAuthority',
           roles: ['admin']
         }
+      },
+      {
+        path: 'upload',
+        component: () => import('@/views/components-demo/avatar-upload'),
+        name: 'upload',
+        meta: {
+          title: 'upload',
+          roles: ['admin']
+        }
       }
     ]
   }
