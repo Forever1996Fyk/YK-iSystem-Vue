@@ -57,7 +57,7 @@
       </div>
     </div>
 
-    <my-upload field="img"
+    <my-upload field="userIcon"
                @crop-success="cropSuccess"
                @crop-upload-success="cropUploadSuccess"
                @crop-upload-fail="cropUploadFail"
@@ -75,6 +75,7 @@
     import PanThumb from '@/components/PanThumb'
     import myUpload from 'vue-image-crop-upload'
     import { getToken } from '@/utils/auth'
+    import {mapMutations} from 'vuex'
 
     export default {
         components: {PanThumb, myUpload},
@@ -87,7 +88,7 @@
                     Authorization: 'Bearer ' + getToken()
                 },
                 imgDataUrl: '',
-                url: 'http://127.0.0.1:8769/fileupload/api/fileupload/upload'
+                url: 'http://127.0.0.1:8769/fileupload/api/admin/updateUserIcon'
             };
         },
         props: {
@@ -104,10 +105,13 @@
             }
         },
         methods: {
+            ...mapMutations({
+                SET_AVATAR: 'user/SET_AVATAR'
+            }),
             updateUserIcon() {
                 this.show = !this.show;
             },
-            /**
+            /**y
              * crop success
              *
              * [param] imgDataUrl
@@ -126,6 +130,10 @@
             cropUploadSuccess(jsonData, field){
                 console.log('-------- upload success --------');
                 console.log(jsonData);
+                console.log(jsonData.data.attachUrl);
+                this.SET_AVATAR(jsonData.data.attachUrl);
+                this.user.avatar = jsonData.data.attachUrl
+                console.log(this.user.avatar);
                 console.log('field: ' + field);
             },
             /**

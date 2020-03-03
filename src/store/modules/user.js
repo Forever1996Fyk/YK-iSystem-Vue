@@ -54,7 +54,7 @@ const actions = {
         }
         // var roles = [];
         // roles.push(data.roleCode);
-        const { roles, username, userIcon, nickName } = data
+        const { roles, username, userIconUrl, nickName } = data
 
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
@@ -63,7 +63,7 @@ const actions = {
 
         commit('SET_ROLES', roles)
         commit('SET_NAME', username)
-        commit('SET_AVATAR', userIcon)
+        commit('SET_AVATAR', userIconUrl)
         commit('SET_INTRODUCTION', nickName)
         resolve(data)
       }).catch(error => {
