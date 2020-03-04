@@ -12,6 +12,23 @@ module.exports = {
     {key: 'PUT', value: 'PUT'},
     {key: 'DELETE', value: 'DELETE'}
   ],
+  marryFlag: [
+    {key: 0, value: '未婚'},
+    {key: 1, value: '已婚'}
+  ],
+  sex: [
+    {key: 0, value: '男'},
+    {key: 1, value: '女'}
+  ],
+  education: [
+    {key: 0, value: '小学'},
+    {key: 1, value: '初中'},
+    {key: 2, value: '高中'},
+    {key: 3, value: '大专'},
+    {key: 4, value: '本科'},
+    {key: 5, value: '硕士'},
+    {key: 6, value: '博士'}
+  ],
   filterKeyValue(obj) {
     var result = obj.reduce((acc, cur) => {
       acc[cur.key] = cur.value;
@@ -24,5 +41,5 @@ module.exports = {
       data = data.substring(0, 20) + '...';
     }
     return data;
-  }
+  },
 };

@@ -363,3 +363,41 @@ export function getArrayInObjectArray(array, param) {
     }
   }
 }
+
+export function getAreaData(area, type) {
+  var data = area;
+  var prov = [];
+  var city1 =[];
+  var dist1 = [];
+  for (var item in data) {
+    if (item.match(/0000$/)) {//省
+      prov.push({key: item, value: data[item], children: []});
+    } else if (item.match(/00$/)) {//市
+      city1.push({key: item, value: data[item], children: []});
+    } else {
+      dist1.push({key: item, value: data[item]});
+    }
+  }
+  switch (type) {
+    case 'prov':
+      for (var index in prov) {
+        for (var index1 in city1) {
+          if (prov[index].key.slice(0, 2) === city1[index1].key.slice(0, 2)) {
+            prov[index].children.push(city1[index1])
+          }
+        }
+      }
+      return prov;
+    case 'city':
+      for (var index in city1) {
+        for (var index1 in dist1) {
+          if (city1[index].key.slice(0, 2) === dist1[index1].key.slice(0, 2)) {
+            city1[index].children.push(dist1[index1])
+          }
+        }
+      }
+      return city1;
+    case 'dist':
+      return dist1;
+  }
+}
