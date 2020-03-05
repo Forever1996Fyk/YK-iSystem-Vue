@@ -204,6 +204,40 @@ export const asyncRoutes = [
         }
       }
     ]
+  },
+  {
+    path: '/articleManage',
+    component: Layout,
+    redirect: '/articleManage/articleList',
+    alwaysShow: true,
+    name: 'ArticleManage',
+    meta: {
+      title: 'ArticleManage',
+      icon: 'example',
+      roles: ['admin']
+    },
+    children: [
+      {
+        path: 'createArticle',
+        component: () => import('@/views/articleManage/createArticle'),
+        name: 'createArticle',
+        meta: {
+          title: 'createArticle',
+          icon: 'edit',
+          roles: ['admin']
+        }
+      },
+      {
+        path: 'articleList',
+        component: () => import('@/views/articleManage/articleList'),
+        name: 'articleList',
+        meta: {
+          title: 'articleList',
+          icon: 'list',
+          roles: ['admin']
+        }
+      }
+    ]
   }
 ]
 

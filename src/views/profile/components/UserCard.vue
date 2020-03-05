@@ -75,6 +75,7 @@
     import PanThumb from '@/components/PanThumb'
     import myUpload from 'vue-image-crop-upload'
     import { getToken } from '@/utils/auth'
+    import bucket from '@/config/bucket'
     import {mapMutations} from 'vuex'
 
     export default {
@@ -82,8 +83,7 @@
         data() {
             return {
                 show: false,
-                params: {
-                },
+                params: bucket.bucketPubR,
                 headers: {
                     Authorization: 'Bearer ' + getToken()
                 },

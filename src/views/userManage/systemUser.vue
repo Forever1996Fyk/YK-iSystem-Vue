@@ -57,9 +57,9 @@
           <span>{{ row.nickName }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.userIconUrl')" align="center">
+      <el-table-column :label="$t('table.userIcon')" align="center">
         <template slot-scope="{row}">
-          <img :src="row.userIconUrl" min-width="50" height="50" />
+          <img :src="row.userIconUrl" min-width="30" height="30" />
         </template>
       </el-table-column>
       <!--      <el-table-column :label="$t('table.userIcon')" align="center">-->
