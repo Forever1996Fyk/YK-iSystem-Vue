@@ -2,7 +2,7 @@
   <div class="createPost-container">
     <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
       <sticky :z-index="10" :class-name="'sub-navbar '+postForm.status">
-        <CommentDropdown v-model="postForm.comment_disabled"/>
+        <CommentDropdown v-model="postForm.comment"/>
         <PlatformDropdown v-model="postForm.platforms"/>
         <SourceUrlDropdown v-model="postForm.source_uri"/>
         <el-button v-loading="loading" style="margin-left: 10px;" type="success" @click="submitForm">
@@ -26,7 +26,7 @@
               <el-row>
                 <el-col :span="10">
                   <el-form-item label-width="120px" :label="$t('table.publishTime')" class="postInfo-container-item">
-                    <el-date-picker v-model="displayTime" type="datetime" format="yyyy-MM-dd HH:mm:ss"
+                    <el-date-picker v-model="postForm.publishTime" type="datetime" format="yyyy-MM-dd HH:mm:ss"
                                     placeholder="Select date and time"/>
                   </el-form-item>
                 </el-col>
@@ -49,7 +49,7 @@
         </el-row>
 
         <el-form-item style="margin-bottom: 40px;" label-width="70px" label="Summary:">
-          <el-input v-model="postForm.content_short" :rows="1" type="textarea" class="article-textarea" autosize
+          <el-input v-model="postForm.articleSummary" :rows="1" type="textarea" class="article-textarea" autosize
                     placeholder="Please enter the content"/>
           <span v-show="contentShortLength" class="word-counter">{{ contentShortLength }}words</span>
         </el-form-item>
@@ -58,8 +58,8 @@
           <Tinymce ref="editor" v-model="postForm.content" :height="400"/>
         </el-form-item>
 
-        <el-form-item prop="image_uri" style="margin-bottom: 30px;">
-          <Upload v-model="postForm.image_uri"/>
+        <el-form-item prop="articleCover" style="margin-bottom: 30px;">
+          <Upload v-model="postForm.articleCover" :articleCoverUrl = "postForm.articleCoverUrl"/>
         </el-form-item>
       </div>
     </el-form>
@@ -72,21 +72,23 @@
     import MDinput from '@/components/MDinput'
     import Sticky from '@/components/Sticky' // 粘性header组件
     import {validURL} from '@/utils/validate'
-    import {fetchArticle} from '@/api/article'
+    import {addArticle, editArticle, getArticleById} from '@/api/article'
     import {CommentDropdown, PlatformDropdown, SourceUrlDropdown} from './Dropdown'
+    import {formatDate} from '@/utils'
 
     const defaultForm = {
-        status: 'draft',
+        status: 2,
         title: '', // 文章题目
         content: '', // 文章内容
-        content_short: '', // 文章摘要
+        articleSummary: '', // 文章摘要
         source_uri: '', // 文章外链
-        image_uri: '', // 文章图片
-        display_time: undefined, // 前台展示时间
+        articleCover: '', // 文章图片id
+        articleCoverUrl: '', // 文章图片Url
         id: undefined,
         platforms: [],
-        comment_disabled: false,
-        importance: 0
+        comment: true,
+        importance: 0,
+        publishTime: ''
     }
 
     export default {
@@ -130,7 +132,6 @@
                 loading: false,
                 userListOptions: [],
                 rules: {
-                    image_uri: [{validator: validateRequire}],
                     title: [{validator: validateRequire}],
                     content: [{validator: validateRequire}],
                     source_uri: [{validator: validateSourceUri, trigger: 'blur'}]
@@ -140,28 +141,16 @@
         },
         computed: {
             contentShortLength() {
-                return this.postForm.content_short.length
+                return this.postForm.articleSummary.length
             },
             lang() {
                 return this.$store.getters.language
-            },
-            displayTime: {
-                // set and get is useful when the data
-                // returned by the back end api is different from the front end
-                // back end return => "2013-06-25 06:59:25"
-                // front end need timestamp => 1372114765000
-                get() {
-                    return (+new Date(this.postForm.display_time))
-                },
-                set(val) {
-                    this.postForm.display_time = new Date(val)
-                }
             }
         },
         created() {
             if (this.isEdit) {
                 const id = this.$route.params && this.$route.params.id
-                this.fetchData(id)
+                this.getArticleById(id);
             }
 
             // Why need to make a copy of this.$route here?
@@ -170,13 +159,14 @@
             this.tempRoute = Object.assign({}, this.$route)
         },
         methods: {
-            fetchData(id) {
-                fetchArticle(id).then(response => {
-                    this.postForm = response.data
+            getArticleById(id) {
+                getArticleById(id).then(response => {
+                    this.postForm = response.data;
+                    this.postForm.comment = this.postForm.comment === 1;
 
                     // just for test
-                    this.postForm.title += `   Article Id:${this.postForm.id}`
-                    this.postForm.content_short += `   Article Id:${this.postForm.id}`
+                    // this.postForm.title += `   Article Id:${this.postForm.id}`
+                    // this.postForm.articleSummary += `   Article Id:${this.postForm.id}`
 
                     // set tagsview title
                     this.setTagsViewTitle()
@@ -197,39 +187,58 @@
                 document.title = `${title} - ${this.postForm.id}`
             },
             submitForm() {
-                console.log(this.postForm)
+                console.log(this.postForm);
+                this.saveArticle(1);
+            },
+            saveArticle(status) {
                 this.$refs.postForm.validate(valid => {
                     if (valid) {
-                        this.loading = true
-                        this.$notify({
-                            title: '成功',
-                            message: '发布文章成功',
-                            type: 'success',
-                            duration: 2000
-                        })
-                        this.postForm.status = 'published'
-                        this.loading = false
+                        this.loading = true;
+                        this.postForm.status = status;
+                        if (this.postForm.comment) {
+                            this.postForm.comment = 1;
+                        } else {
+                            this.postForm.comment = 0;
+                        }
+                        this.postForm.publishTime = formatDate(this.postForm.publishTime, "yyyy-MM-dd hh:mm:ss");
+
+                        if (!this.postForm.id) {
+                            addArticle(this.postForm).then((res) => {
+                                this.checkStatus(status, res);
+                                this.postForm = Object.assign({}, defaultForm)
+                            });
+                        } else {
+                            editArticle(this.postForm).then((res) => {
+                                this.checkStatus(status, res);
+                            });
+                        }
+
                     } else {
                         console.log('error submit!!')
                         return false
                     }
                 })
             },
-            draftForm() {
-                if (this.postForm.content.length === 0 || this.postForm.title.length === 0) {
+            checkStatus(status, res) {
+                if (status === 1) {
+                    this.$notify({
+                        title: '成功',
+                        message: res.message,
+                        type: 'success',
+                        duration: 2000
+                    });
+                } else {
                     this.$message({
-                        message: '请填写必要的标题和内容',
-                        type: 'warning'
+                        message: '保存草稿成功',
+                        type: 'success',
+                        showClose: true,
+                        duration: 1000
                     })
-                    return
                 }
-                this.$message({
-                    message: '保存成功',
-                    type: 'success',
-                    showClose: true,
-                    duration: 1000
-                })
-                this.postForm.status = 'draft'
+                this.loading = false;
+            },
+            draftForm() {
+                this.saveArticle(2);
             }
         }
     }

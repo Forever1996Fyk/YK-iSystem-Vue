@@ -29,6 +29,11 @@ module.exports = {
     {key: 5, value: '硕士'},
     {key: 6, value: '博士'}
   ],
+  articleStatus: [
+    {key: 0, value: '已删除'},
+    {key: 1, value: '已发布'},
+    {key: 2, value: '草稿'},
+  ],
   filterKeyValue(obj) {
     var result = obj.reduce((acc, cur) => {
       acc[cur.key] = cur.value;

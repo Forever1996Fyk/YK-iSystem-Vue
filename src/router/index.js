@@ -236,7 +236,14 @@ export const asyncRoutes = [
           icon: 'list',
           roles: ['admin']
         }
-      }
+      },
+      {
+        path: 'editArticle/:id(\\d+)',
+        component: () => import('@/views/articleManage/editArticle'),
+        name: 'EditArticle',
+        meta: { title: 'Edit Article', noCache: true, activeMenu: '/articleManage/articleList' },
+        hidden: true
+      },
     ]
   }
 ]

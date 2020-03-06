@@ -2,23 +2,16 @@
   <div class="upload-container">
     <el-button :style="{background:color,borderColor:color}" icon="el-icon-upload" size="mini" type="primary"
                @click=" dialogVisible=true">
-      上传图片
+      上传视频
     </el-button>
     <el-dialog :visible.sync="dialogVisible">
-      <el-upload
-        :multiple="true"
-        :file-list="fileList"
-        :show-file-list="true"
-        :on-remove="handleRemove"
-        :on-success="handleSuccess"
-        :before-upload="beforeUpload"
-        :headers="headers"
-        class="editor-slide-upload"
-        :action="url"
-        :data="param"
-        name="articleContent"
-        list-type="picture-card"
-      >
+      <el-upload class="avatar-uploader"
+                 :action="url"
+                 :data="param"
+                 :headers="headers"
+                 :on-success="handleSuccess"
+                 :before-upload="beforeUpload"
+                 :show-file-list="false">
         <el-button size="small" type="primary">
           Click upload
         </el-button>
