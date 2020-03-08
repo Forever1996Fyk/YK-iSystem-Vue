@@ -10,7 +10,7 @@ import request from '@/utils/request'
  */
 export function addSystemApi(data) {
   return request({
-    url: '/system/api/systemApi/addSystemApi',
+    url: '/admin/api/systemApi/addSystemApi',
     method: 'post',
     data
   })
@@ -23,7 +23,7 @@ export function addSystemApi(data) {
  */
 export function getSystemApiById(id) {
   return request({
-    url: '/system/api/systemApi/getSystemApiById',
+    url: '/admin/api/systemApi/getSystemApiById',
     method: 'get',
     params: { id }
   })
@@ -35,7 +35,7 @@ export function getSystemApiById(id) {
  */
 export function editSystemApi(data) {
   return request({
-    url: '/system/api/systemApi/editSystemApi',
+    url: '/admin/api/systemApi/editSystemApi',
     method: 'put',
     data
   })
@@ -47,7 +47,7 @@ export function editSystemApi(data) {
  */
 export function delSystemApi(id) {
   return request({
-    url: '/system/api/systemApi/delSystemApi',
+    url: '/admin/api/systemApi/delSystemApi',
     method: 'delete',
     params: { id }
   })
@@ -59,7 +59,7 @@ export function delSystemApi(id) {
  */
 export function delSystemApiByIds(ids) {
   return request({
-    url: '/system/api/systemApi/delSystemApi/' + ids,
+    url: '/admin/api/systemApi/delSystemApi/' + ids,
     method: 'delete'
   })
 }
@@ -71,7 +71,7 @@ export function delSystemApiByIds(ids) {
  */
 export function getSystemApisNoPage(data) {
   return request({
-    url: '/system/api/systemApi/getSystemApis/noPage',
+    url: '/admin/api/systemApi/getSystemApis/noPage',
     method: 'get',
     params: data
   })
@@ -84,7 +84,7 @@ export function getSystemApisNoPage(data) {
  */
 export function getSystemApis(data) {
   return request({
-    url: '/system/api/systemApi/getSystemApis',
+    url: '/admin/api/systemApi/getSystemApis',
     method: 'get',
     params: data
   })

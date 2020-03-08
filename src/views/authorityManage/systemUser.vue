@@ -130,13 +130,10 @@
       <el-table-column fixed="right" :label="$t('table.actions')" align="center" class-name="small-padding fixed-width"
                        width="230">
         <template slot-scope="{row}">
-          <el-button type="primary" size="mini" @click="handleAssignRole(row)">
-            {{ $t('table.assignRole') }}
-          </el-button>
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
+          <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleUpdate(row)">
             {{ $t('table.edit') }}
           </el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(row.id)">
+          <el-button size="mini" type="danger" icon="el-icon-delete" @click="handleDelete(row.id)">
             {{ $t('table.delete') }}
           </el-button>
         </template>
@@ -249,6 +246,15 @@
         </el-row>
         <el-row>
           <el-col :span="24">
+            <el-form-item :label="$t('table.roleName')" prop="role" >
+              <el-select v-model="formData.roles"  multiple class="filter-item" placeholder="Please Select" style="width: 100%">
+                <el-option v-for="item in roleOptions" :key="item.roleId" :label="item.roleName" :value="item.roleId"/>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
             <el-form-item :label="$t('table.remark')" prop="remark">
               <el-input
                 v-model="formData.remark"
@@ -298,8 +304,8 @@
         assignRole
     } from '@/api/systemUser'
     import baseData from '@/config/baseData'
-    import {getSystemRolesNoPage} from '@/api/systemRole'
     import area from '@/config/area.json'
+    import {getSystemRolesNoPage} from "@/api/systemRole";
 
     let that;
     export default {
@@ -361,7 +367,8 @@
                     dist: null,
                     address: null,
                     idcard: null,
-                    remark: null
+                    remark: null,
+                    roles: []
                 },
                 dialogFormVisible: false,
                 dialogRoleTableVisible: false,
@@ -369,7 +376,6 @@
                 formTitle: {
                     edit: this.$t('Edit'),
                     add: this.$t('Add'),
-                    assignRole: this.$t('assignRole')
                 },
                 sex: baseData.sex,
                 marryFlag: baseData.marryFlag,
@@ -388,8 +394,21 @@
         created() {
             this.getList();
             this.getAreaData();
+            this.getRoles();
         },
         methods: {
+            getRoles() {
+                this.roleOptions = [];
+                getSystemRolesNoPage().then(res => {
+                    var data = res.data;
+                    if (data) {
+                        for (var i = 0; i < data.length; i++) {
+                            var obj = {roleId: data[i].id, roleName: data[i].roleName};
+                            this.roleOptions.push(obj);
+                        }
+                    }
+                })
+            },
             getAreaData() {
                 var data = area;
                 for (var item in data) {
@@ -496,6 +515,14 @@
                 this.formData = Object.assign({}, data)// copy obj
                 this.choseProv(this.formData.prov);
                 this.choseCity(this.formData.city);
+                // if (this.formData.roles) {
+                //     console.log(this.formData.roles);
+                //     var roleNames = [];
+                //     for (var item in this.formData.roles) {
+                //         roleNames.push({key: this.formData.roles[item].roleId, value: this.formData.roles[item].roleName});
+                //     }
+                //     this.formData.roles = roleNames;
+                // }
                 this.dialogStatus = 'edit'
                 this.dialogFormVisible = true
                 this.$nextTick(() => {
@@ -511,7 +538,7 @@
             addSave() {
                 this.$refs['dataForm'].validate((valid) => {
                     if (valid) {
-                        console.log(this.formData)
+                        console.log(this.formData);
                         addSystemUser(this.formData).then((res) => {
                             this.$message.success(res.message)
                             this.getList()
@@ -523,7 +550,7 @@
             editSave() {
                 this.$refs['dataForm'].validate((valid) => {
                     if (valid) {
-                        console.log(this.formData)
+                        console.log(this.formData);
                         editSystemUser(this.formData).then((res) => {
                             console.log(res)
                             this.$message.success(res.message)

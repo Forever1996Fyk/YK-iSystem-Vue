@@ -165,20 +165,20 @@ export const asyncRoutes = [
     ]
   },
   {
-    path: '/userManage',
+    path: '/authorityManage',
     component: Layout,
-    redirect: '/userManage/systemUser',
+    redirect: '/authorityManage/systemUser',
     alwaysShow: true,
-    name: 'UserManage',
+    name: 'AuthorityManage',
     meta: {
-      title: 'UserManage',
+      title: 'AuthorityManage',
       icon: 'user',
       roles: ['admin']
     },
     children: [
       {
         path: 'systemUser',
-        component: () => import('@/views/userManage/systemUser'),
+        component: () => import('@/views/authorityManage/systemUser'),
         name: 'systemUser',
         meta: {
           title: 'systemUser',
@@ -187,7 +187,7 @@ export const asyncRoutes = [
       },
       {
         path: 'systemRole',
-        component: () => import('@/views/userManage/systemRole'),
+        component: () => import('@/views/authorityManage/systemRole'),
         name: 'systemRole',
         meta: {
           title: 'systemRole',
@@ -196,7 +196,7 @@ export const asyncRoutes = [
       },
       {
         path: 'systemAuthority',
-        component: () => import('@/views/userManage/systemAuthority'),
+        component: () => import('@/views/authorityManage/systemAuthority'),
         name: 'systemAuthority',
         meta: {
           title: 'systemAuthority',

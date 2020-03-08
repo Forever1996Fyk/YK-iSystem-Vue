@@ -60,13 +60,10 @@
       </el-table-column>
       <el-table-column :label="$t('table.actions')" align="center" class-name="small-padding fixed-width" width="230">
         <template slot-scope="{row}">
-          <el-button type="primary" size="mini" @click="handleAssignAuth(row)">
-            {{ $t('table.assignAuth') }}
-          </el-button>
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
+          <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleUpdate(row)">
             {{ $t('table.edit') }}
           </el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(row.id)">
+          <el-button size="mini" type="danger" icon="el-icon-delete" @click="handleDelete(row.id)">
             {{ $t('table.delete') }}
           </el-button>
         </template>
@@ -93,6 +90,16 @@
           <el-col :span="12">
             <el-form-item :label="$t('table.roleCode')" prop="roleCode">
               <el-input v-model="formData.roleCode"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="24">
+            <el-form-item :label="$t('table.authMenu')" prop="role" >
+              <el-select v-model="formData.roles"  multiple class="filter-item" placeholder="Please Select" style="width: 100%">
+                <el-option v-for="item in roleOptions" :key="item.roleId" :label="item.roleName" :value="item.roleId"/>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
