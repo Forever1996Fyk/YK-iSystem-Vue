@@ -202,6 +202,15 @@ export const asyncRoutes = [
           title: 'systemAuthority',
           roles: ['admin']
         }
+      },
+      {
+        path: 'systemMenu',
+        component: () => import('@/views/authorityManage/systemMenu'),
+        name: 'systemMenu',
+        meta: {
+          title: 'systemMenu',
+          roles: ['admin']
+        }
       }
     ]
   },

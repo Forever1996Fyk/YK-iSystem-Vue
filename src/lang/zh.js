@@ -11,6 +11,7 @@ export default {
     UserManage: '用户管理',
     systemUser: '系统用户',
     systemAuthority: '系统权限',
+    systemMenu: '系统菜单',
     systemRole: '系统角色',
     ArticleManage: '文章管理',
     createArticle: '创建文章',
