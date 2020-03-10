@@ -81,17 +81,26 @@
       <!-- rules表示表单验证规则 -->
       <el-form ref="dataForm" :rules="rules" :model="formData" label-width="100px">
         <el-row>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item :label="$t('table.authority')" prop="authority">
               <el-input v-model="formData.authority"/>
             </el-form-item>
           </el-col>
 
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item :label="$t('table.apiName')" prop="apiId">
               <el-select v-model="formData.apiId" class="filter-item" placeholder="Please select"
                          style="width:100%">
                 <el-option v-for="item in apiIdOptions" :key="item.key" :label="item.value" :value="item.key"/>
+              </el-select>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="8">
+            <el-form-item :label="$t('table.menuName')" prop="menuId">
+              <el-select v-model="formData.menuId" class="filter-item" placeholder="Please select"
+                         style="width:100%">
+                <el-option v-for="item in menuIdOptions" :key="item.key" :label="item.value" :value="item.key"/>
               </el-select>
             </el-form-item>
           </el-col>
@@ -135,6 +144,9 @@
     import {
         getSystemApisNoPage
     } from '@/api/systemApi'
+    import {
+        getSystemMenus
+    } from '@/api/systemMenu'
     import baseData from '@/config/baseData'
 
     export default {
@@ -160,7 +172,8 @@
                     id: '',
                     authority: null,
                     apiId: null,
-                    remark: null
+                    remark: null,
+                    menuId: null
                 },
                 dialogFormVisible: false,
                 dialogStatus: '',
@@ -178,6 +191,7 @@
         created() {
             this.getList();
             this.getApiIds();
+            this.getMenuIds();
         },
         methods: {
             getList() {
@@ -288,6 +302,18 @@
                         for (var i = 0; i < data.length; i++) {
                             var obj = {key: data[i].id, value: data[i].apiCode};
                             this.apiIdOptions.push(obj);
+                        }
+                    }
+                })
+            },
+            getMenuIds() {
+                this.menuIdOptions = [];
+                getSystemMenus().then((res) => {
+                    var data = res.data;
+                    if (data) {
+                        for (var i = 0; i < data.length; i++) {
+                            var obj = {key: data[i].id, value: data[i].menuCode};
+                            this.menuIdOptions.push(obj);
                         }
                     }
                 })

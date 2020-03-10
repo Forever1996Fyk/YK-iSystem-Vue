@@ -152,15 +152,6 @@ export const asyncRoutes = [
           title: 'gateway',
           roles: ['admin']
         }
-      },
-      {
-        path: 'systemApi',
-        component: () => import('@/views/systemManage/systemApi'),
-        name: 'systemApi',
-        meta: {
-          title: 'systemApi',
-          roles: ['admin']
-        }
       }
     ]
   },
@@ -209,6 +200,15 @@ export const asyncRoutes = [
         name: 'systemMenu',
         meta: {
           title: 'systemMenu',
+          roles: ['admin']
+        }
+      },
+      {
+        path: 'systemApi',
+        component: () => import('@/views/authorityManage/systemApi'),
+        name: 'systemApi',
+        meta: {
+          title: 'systemApi',
           roles: ['admin']
         }
       }

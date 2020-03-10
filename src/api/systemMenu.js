@@ -76,6 +76,18 @@ export function getSystemMenusNoPage(data) {
     params: data
   })
 }
+/**
+ * 获取所有的系统菜单表(不分页)
+ * @param data
+ * @returns {*}
+ */
+export function getSystemMenusNodeList(data) {
+  return request({
+    url: '/admin/api/systemMenu/getSystemMenusNodeList',
+    method: 'get',
+    params: data
+  })
+}
 
 /**
  * 获取所有系统菜单表

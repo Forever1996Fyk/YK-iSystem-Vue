@@ -124,7 +124,18 @@ export default {
     articleCover: '文章封面',
     isComment: '开启评论',
     comment: '评论',
-    authMenu: '权限菜单'
+    authMenu: '权限菜单',
+    menuName: '菜单名称',
+    menuCode: '菜单编码',
+    menuDesc: '菜单描述',
+    pMenu: '上级菜单',
+    menuScheme: '路径前缀',
+    menuTarget: '打开方式',
+    url: 'api路径',
+    icon: '图标',
+    menuLevel: '菜单级别',
+    sort: "序号",
+    menuUrl: '路由路径'
   },
   example: {
     warning: '创建和编辑页面是不能被 keep-alive 缓存的，因为keep-alive 的 include 目前不支持根据路由来缓存，所以目前都是基于 component name 来进行缓存的。如果你想类似的实现缓存效果，可以使用 localStorage 等浏览器缓存方案。或者不要使用 keep-alive 的 include，直接缓存所有页面。详情见'

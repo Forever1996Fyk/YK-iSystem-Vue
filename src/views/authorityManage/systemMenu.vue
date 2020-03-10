@@ -40,6 +40,8 @@
       fit
       highlight-current-row
       style="width: 100%;"
+      row-key="id"
+      :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
       <el-table-column type="selection" width="55"/>
       <el-table-column :label="$t('table.menuName')" align="center">
@@ -57,29 +59,24 @@
           <span>{{ row.menuDesc }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.pid')" align="center">
+      <el-table-column :label="$t('table.pMenu')" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.pid }}</span>
+          <span>{{ row.pmenuName }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.scheme')" align="center">
+      <el-table-column :label="$t('table.menuScheme')" align="center">
         <template slot-scope="{row}">
           <span>{{ row.scheme }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.target')" align="center">
+      <el-table-column :label="$t('table.menuTarget')" align="center">
         <template slot-scope="{row}">
           <span>{{ row.target }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.sort')" align="center">
+      <el-table-column :label="$t('table.menuLevel')" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.sort }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('table.level')" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.level }}</span>
+          <el-tag :type="row.level === '1'?'success':row.level === '2'?'':'danger'">{{ row.level | menuLevelFilter}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column :label="$t('table.remark')" align="center">
@@ -97,11 +94,6 @@
           <span>{{ row.icon }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.serviceId')" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.serviceId }}</span>
-        </template>
-      </el-table-column>
       <el-table-column :label="$t('table.actions')" align="center" class-name="small-padding fixed-width" width="230">
         <template slot-scope="{row}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
@@ -114,65 +106,55 @@
       </el-table-column>
     </el-table>
 
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="listQuery.start"
-      :limit.sync="listQuery.pageSize"
-      @pagination="getList"
-    />
-
     <el-dialog :title="formTitle[dialogStatus]" :visible.sync="dialogFormVisible">
       <!-- rules表示表单验证规则 -->
       <el-form ref="dataForm" :rules="rules" :model="formData" label-width="100px">
-        <el-col :span="12">
-          <el-form-item :label="$t('table.menuName')" prop="menuName">
-            <el-input v-model="formData.menuName"/>
-          </el-form-item>
-        </el-col>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item :label="$t('table.menuName')" prop="menuName">
+              <el-input v-model="formData.menuName"/>
+            </el-form-item>
+          </el-col>
 
-        <el-col :span="12">
-          <el-form-item :label="$t('table.menuCode')" prop="menuCode">
-            <el-input v-model="formData.menuCode"/>
-          </el-form-item>
-        </el-col>
+          <el-col :span="12">
+            <el-form-item :label="$t('table.menuLevel')" prop="level">
+              <el-radio v-model="formData.level" label="1" border>菜单</el-radio>
+              <el-radio v-model="formData.level" label="2" border>子菜单</el-radio>
+              <el-radio v-model="formData.level" label="3" border>按钮</el-radio>
+            </el-form-item>
+          </el-col>
+        </el-row>
 
-        <el-col :span="12">
-          <el-form-item :label="$t('table.menuDesc')" prop="menuDesc">
-            <el-input v-model="formData.menuDesc"/>
-          </el-form-item>
-        </el-col>
-
-        <el-col :span="12">
-          <el-form-item :label="$t('table.pid')" prop="pid">
-            <el-input v-model="formData.pid"/>
-          </el-form-item>
-        </el-col>
-
-        <el-col :span="12">
-          <el-form-item :label="$t('table.scheme')" prop="scheme">
-            <el-input v-model="formData.scheme"/>
-          </el-form-item>
-        </el-col>
-
-        <el-col :span="12">
-          <el-form-item :label="$t('table.target')" prop="target">
-            <el-input v-model="formData.target"/>
-          </el-form-item>
-        </el-col>
-
-        <el-col :span="12">
-          <el-form-item :label="$t('table.sort')" prop="sort">
-            <el-input v-model="formData.sort"/>
-          </el-form-item>
-        </el-col>
-
-        <el-col :span="12">
-          <el-form-item :label="$t('table.level')" prop="level">
-            <el-input v-model="formData.level"/>
-          </el-form-item>
-        </el-col>
-
+        <el-row>
+          <el-col :span="12">
+            <el-form-item :label="$t('table.menuCode')" prop="menuCode">
+              <el-input v-model="formData.menuCode"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item :label="$t('table.pMenu')" prop="pid">
+              <el-cascader v-model="formData.pid" :props="pMenu" :options="list" style="width: 100%">
+              </el-cascader>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item :label="$t('table.menuUrl')" prop="url">
+              <el-input v-model="formData.url"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item :label="$t('table.sort')" prop="sort">
+              <el-input v-model="formData.sort"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item :label="$t('table.icon')" prop="icon">
+              <el-input v-model="formData.icon"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-row>
           <el-col :span="24">
             <el-form-item :label="$t('table.remark')" prop="remark">
@@ -185,24 +167,18 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-col :span="12">
-          <el-form-item :label="$t('table.url')" prop="url">
-            <el-input v-model="formData.url"/>
-          </el-form-item>
-        </el-col>
-
-        <el-col :span="12">
-          <el-form-item :label="$t('table.icon')" prop="icon">
-            <el-input v-model="formData.icon"/>
-          </el-form-item>
-        </el-col>
-
-        <el-col :span="12">
-          <el-form-item :label="$t('table.serviceId')" prop="serviceId">
-            <el-input v-model="formData.serviceId"/>
-          </el-form-item>
-        </el-col>
-
+        <el-row>
+          <el-col :span="24">
+            <el-form-item :label="$t('table.menuDesc')" prop="menuDesc">
+              <el-input
+                v-model="formData.menuDesc"
+                :autosize="{ minRows: 4, maxRows: 8}"
+                type="textarea"
+                placeholder="Please input"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">
@@ -224,7 +200,7 @@
         editSystemMenu,
         delSystemMenu,
         delSystemMenuByIds,
-        getSystemMenus
+        getSystemMenusNodeList
     } from '@/api/systemMenu'
     import baseData from '@/config/baseData'
 
@@ -233,23 +209,29 @@
         components: {Pagination},
         directives: {waves},
         filters: {
-            whetherFilter(type) {
-                var whetherFilterKeyValue = baseData.whetherOptions.reduce((acc, cur) => {
+            menuLevelFilter(type) {
+                var menuLevelFilterKeyValue = baseData.menuLevel.reduce((acc, cur) => {
                     acc[cur.key] = cur.value;
                     return acc;
                 }, {});
-                return whetherFilterKeyValue[type];
+                return menuLevelFilterKeyValue[type];
             }
         },
         data() {
             return {
                 list: null,
-                total: 0,
                 listLoading: true,
                 listQuery: {
                     start: 1,
                     pageSize: 20,
                     title: null
+                },
+                pMenu: {
+                    value: 'id',
+                    label: 'menuName',
+                    children: 'children',
+                    checkStrictly: true,
+                    emitPath: false
                 },
                 formData: {
                     id: '',
@@ -284,10 +266,10 @@
         methods: {
             getList() {
                 this.listLoading = true;
-                getSystemMenus(this.listQuery).then(res => {
+                getSystemMenusNodeList(this.listQuery).then(res => {
                     console.log(res);
-                    this.list = res.data.data;
-                    this.total = res.data.total;
+                    this.list = res.data;
+                    // this.total = res.data.total;
 
                     // Just to simulate the time of the request
                     setTimeout(() => {
@@ -336,11 +318,7 @@
                 this.$refs['dataForm'].validate((valid) => {
                     if (valid) {
                         console.log(this.formData);
-                        add$
-                        {
-                            className
-                        }
-                        (this.formData).then((res) => {
+                        addSystemMenu(this.formData).then((res) => {
                             this.$message.success(res.message);
                             this.getList();
                             this.dialogFormVisible = false;
@@ -352,11 +330,7 @@
                 this.$refs['dataForm'].validate((valid) => {
                     if (valid) {
                         console.log(this.formData);
-                        edit$
-                        {
-                            className
-                        }
-                        (this.formData).then((res) => {
+                        editSystemMenu(this.formData).then((res) => {
                             console.log(res);
                             this.$message.success(res.message);
                             this.getList();

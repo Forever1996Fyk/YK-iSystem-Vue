@@ -34,6 +34,11 @@ module.exports = {
     {key: 1, value: '已发布'},
     {key: 2, value: '草稿'},
   ],
+  menuLevel: [
+    {key: 1, value: '菜单'},
+    {key: 2, value: '子菜单'},
+    {key: 3, value: '按钮'},
+  ],
   filterKeyValue(obj) {
     var result = obj.reduce((acc, cur) => {
       acc[cur.key] = cur.value;
