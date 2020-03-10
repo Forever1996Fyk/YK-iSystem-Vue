@@ -52,6 +52,11 @@
           <span>{{ row.apiCode }}</span>
         </template>
       </el-table-column>
+      <el-table-column :label="$t('table.menuName')" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.menuName }}</span>
+        </template>
+      </el-table-column>
       <el-table-column :label="$t('table.remark')" align="center">
         <template slot-scope="{row}">
           <span>{{ row.remark }}</span>
@@ -99,8 +104,11 @@
           <el-col :span="8">
             <el-form-item :label="$t('table.menuName')" prop="menuId">
               <el-select v-model="formData.menuId" class="filter-item" placeholder="Please select"
-                         style="width:100%">
-                <el-option v-for="item in menuIdOptions" :key="item.key" :label="item.value" :value="item.key"/>
+                         style="width:100%" ref="selectMenu">
+<!--                <el-option v-for="item in menuIdOptions" :key="item.key" :label="item.value" :value="item.key"/>-->
+                <el-option :value="formData.menuId" :label="formData.menuName" style="height:200px;overflow: auto;background-color:#fff">
+                  <el-tree :data="menuList" :props="menuProp" @node-click="getCurrentMenu"></el-tree>
+                </el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -145,7 +153,7 @@
         getSystemApisNoPage
     } from '@/api/systemApi'
     import {
-        getSystemMenus
+        getSystemMenusNoPage,getSystemMenusNodeList
     } from '@/api/systemMenu'
     import baseData from '@/config/baseData'
 
@@ -173,8 +181,10 @@
                     authority: null,
                     apiId: null,
                     remark: null,
-                    menuId: null
+                    menuId: null,
+                    menuName: null
                 },
+                menuName: null,
                 dialogFormVisible: false,
                 dialogStatus: '',
                 formTitle: {
@@ -185,6 +195,12 @@
                 rules: {
                     authority: [{required: true, message: '必填', trigger: 'change'}],
                     apiId: [{required: true, message: '必填', trigger: 'change'}]
+                },
+                menuList: null,
+                menuProp: {
+                    value: 'id',
+                    label: 'menuName',
+                    children: 'children'
                 }
             }
         },
@@ -308,15 +324,23 @@
             },
             getMenuIds() {
                 this.menuIdOptions = [];
-                getSystemMenus().then((res) => {
+                getSystemMenusNodeList().then((res) => {
                     var data = res.data;
-                    if (data) {
-                        for (var i = 0; i < data.length; i++) {
-                            var obj = {key: data[i].id, value: data[i].menuCode};
-                            this.menuIdOptions.push(obj);
-                        }
-                    }
+                    this.menuList = data;
+                    console.log(this.menuList);
+                    // if (data) {
+                    //     for (var i = 0; i < data.length; i++) {
+                    //         var obj = {key: data[i].id, value: data[i].menuName};
+                    //         this.menuIdOptions.push(obj);
+                    //     }
+                    // }
                 })
+            },
+            getCurrentMenu(data) {
+                this.formData.menuId = data.id;
+                this.formData.menuName = data.menuName;
+                this.$refs.selectMenu.blur();
+                console.log(data);
             }
         }
     }
