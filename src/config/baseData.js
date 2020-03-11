@@ -38,6 +38,7 @@ module.exports = {
     {key: 1, value: '菜单'},
     {key: 2, value: '子菜单'},
     {key: 3, value: '按钮'},
+    {key: 4, value: 'api接口'}
   ],
   filterKeyValue(obj) {
     var result = obj.reduce((acc, cur) => {

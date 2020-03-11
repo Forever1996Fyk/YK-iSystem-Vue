@@ -131,7 +131,7 @@ export default {
     pMenu: '上级菜单',
     menuScheme: '路径前缀',
     menuTarget: '打开方式',
-    url: 'api路径',
+    routePath: '路由路径',
     icon: '图标',
     menuLevel: '菜单级别',
     sort: "序号",

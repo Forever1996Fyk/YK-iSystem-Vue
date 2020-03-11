@@ -73,7 +73,8 @@ export const constantRoutes = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
-        meta: { title: 'dashboard', icon: 'dashboard', affix: true }
+        meta: { title: 'dashboard', icon: 'dashboard', affix: true },
+        roles: ['admin', 'customer']
       }
     ]
   },
@@ -132,7 +133,7 @@ export const asyncRoutes = [
     meta: {
       title: 'SystemManage',
       icon: 'lock',
-      roles: ['admin', 'customer']
+      roles: ['admin']
     },
     children: [
       {
@@ -164,7 +165,7 @@ export const asyncRoutes = [
     meta: {
       title: 'AuthorityManage',
       icon: 'user',
-      roles: ['admin']
+      roles: ['admin', 'customer']
     },
     children: [
       {
@@ -173,7 +174,7 @@ export const asyncRoutes = [
         name: 'systemUser',
         meta: {
           title: 'systemUser',
-          roles: ['admin']
+          roles: ['admin', 'customer']
         }
       },
       {

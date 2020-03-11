@@ -84,7 +84,7 @@
           <span>{{ row.remark }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.url')" align="center">
+      <el-table-column :label="$t('table.routePath')" align="center">
         <template slot-scope="{row}">
           <span>{{ row.url }}</span>
         </template>
@@ -110,17 +110,18 @@
       <!-- rules表示表单验证规则 -->
       <el-form ref="dataForm" :rules="rules" :model="formData" label-width="100px">
         <el-row>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item :label="$t('table.menuName')" prop="menuName">
               <el-input v-model="formData.menuName"/>
             </el-form-item>
           </el-col>
 
-          <el-col :span="12">
+          <el-col :span="16">
             <el-form-item :label="$t('table.menuLevel')" prop="level">
               <el-radio v-model="formData.level" label="1" border>菜单</el-radio>
               <el-radio v-model="formData.level" label="2" border>子菜单</el-radio>
               <el-radio v-model="formData.level" label="3" border>按钮</el-radio>
+              <el-radio v-model="formData.level" label="4" border>api接口</el-radio>
             </el-form-item>
           </el-col>
         </el-row>

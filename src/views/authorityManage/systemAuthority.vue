@@ -153,7 +153,7 @@
         getSystemApisNoPage
     } from '@/api/systemApi'
     import {
-        getSystemMenusNoPage,getSystemMenusNodeList
+        getSystemMenusNodeList
     } from '@/api/systemMenu'
     import baseData from '@/config/baseData'
 
@@ -323,7 +323,6 @@
                 })
             },
             getMenuIds() {
-                this.menuIdOptions = [];
                 getSystemMenusNodeList().then((res) => {
                     var data = res.data;
                     this.menuList = data;

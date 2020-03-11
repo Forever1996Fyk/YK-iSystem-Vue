@@ -96,10 +96,8 @@
 
         <el-row>
           <el-col :span="24">
-            <el-form-item :label="$t('table.authMenu')" prop="role" >
-              <el-select v-model="formData.roles"  multiple class="filter-item" placeholder="Please Select" style="width: 100%">
-                <el-option v-for="item in roleOptions" :key="item.roleId" :label="item.roleName" :value="item.roleId"/>
-              </el-select>
+            <el-form-item :label="$t('table.authMenu')" prop="authorityId">
+            <el-tree :data="menuList" :props="menuProp" show-checkbox node-key="authorityId" ref="selectAuthorityTree"></el-tree>
             </el-form-item>
           </el-col>
         </el-row>
@@ -192,6 +190,9 @@
     import {
         getSystemAuthorities
     } from '@/api/systemAuthority'
+    import {
+        getSystemMenusNodeList
+    } from '@/api/systemMenu'
     import {getArrayInObjectArray} from '@/utils'
 
     export default {
@@ -232,7 +233,8 @@
                     id: '',
                     roleName: null,
                     remark: null,
-                    roleCode: null
+                    roleCode: null,
+                    authorityIds: null
                 },
                 dialogFormVisible: false,
                 dialogAuthTableVisible: false,
@@ -246,11 +248,18 @@
                 rules: {
                     roleName: [{required: true, message: '必填', trigger: 'change'}],
                     roleCode: [{required: true, message: '必填', trigger: 'change'}]
+                },
+                menuList: null,
+                menuProp: {
+                    value: 'authorityId',
+                    label: 'menuName',
+                    children: 'children'
                 }
             }
         },
         created() {
-            this.getList()
+            this.getList();
+            this.getAuthorityIds();
         },
         methods: {
             getList() {
@@ -304,12 +313,15 @@
                 this.dialogStatus = 'edit';
                 this.dialogFormVisible = true;
                 this.$nextTick(() => {
+                    //这些方法都需要放在nextTick里, 因为dom元素还没有加载完, 也就是selectAuthorityTree还没有加载出来
+                    this.$refs.selectAuthorityTree.setCheckedKeys(this.formData.authorityIds);
                     this.$refs['dataForm'].clearValidate();
                 })
             },
             addSave() {
                 this.$refs['dataForm'].validate((valid) => {
                     if (valid) {
+                        this.formData.authorityIds = this.$refs.selectAuthorityTree.getCheckedKeys();
                         console.log(this.formData);
                         addSystemRole(this.formData).then((res) => {
                             this.$message.success(res.message);
@@ -322,6 +334,8 @@
             editSave() {
                 this.$refs['dataForm'].validate((valid) => {
                     if (valid) {
+                        this.formData.authorityIds = this.$refs.selectAuthorityTree.getCheckedKeys();
+                        console.log(this.formData.authorityIds);
                         console.log(this.formData);
                         editSystemRole(this.formData).then((res) => {
                             console.log(res);
@@ -391,7 +405,13 @@
                 if (row.selected) {
                     this.$refs.multipleTable.toggleRowSelection(row, true);
                 }
-            }
+            },
+            getAuthorityIds() {
+                getSystemMenusNodeList().then((res) => {
+                    var data = res.data;
+                    this.menuList = data;
+                })
+            },
         }
     }
 </script>
