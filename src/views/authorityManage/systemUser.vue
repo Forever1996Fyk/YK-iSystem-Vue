@@ -246,8 +246,8 @@
         </el-row>
         <el-row>
           <el-col :span="24">
-            <el-form-item :label="$t('table.roleName')" prop="role" >
-              <el-select v-model="formData.roles"  multiple class="filter-item" placeholder="Please Select" style="width: 100%">
+            <el-form-item :label="$t('table.roleName')" prop="roleId" >
+              <el-select v-model="formData.roleId" class="filter-item" placeholder="Please Select" style="width: 100%">
                 <el-option v-for="item in roleOptions" :key="item.roleId" :label="item.roleName" :value="item.roleId"/>
               </el-select>
             </el-form-item>
@@ -368,7 +368,7 @@
                     address: null,
                     idcard: null,
                     remark: null,
-                    roles: []
+                    roleId: null
                 },
                 dialogFormVisible: false,
                 dialogRoleTableVisible: false,

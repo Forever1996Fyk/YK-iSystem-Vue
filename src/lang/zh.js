@@ -9,6 +9,8 @@ export default {
     gateway: '路由网关',
     systemApi: '系统api',
     UserManage: '用户管理',
+    WorkflowManage: '协同管理',
+    modelerDesign: '流程设计器',
     systemUser: '系统用户',
     systemAuthority: '系统权限',
     systemMenu: '系统菜单',
@@ -135,7 +137,8 @@ export default {
     icon: '图标',
     menuLevel: '菜单级别',
     sort: "序号",
-    menuUrl: '路由路径'
+    menuUrl: '路由路径',
+    designFlow: '设计流程图'
   },
   example: {
     warning: '创建和编辑页面是不能被 keep-alive 缓存的，因为keep-alive 的 include 目前不支持根据路由来缓存，所以目前都是基于 component name 来进行缓存的。如果你想类似的实现缓存效果，可以使用 localStorage 等浏览器缓存方案。或者不要使用 keep-alive 的 include，直接缓存所有页面。详情见'

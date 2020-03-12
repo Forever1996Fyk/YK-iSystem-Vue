@@ -255,8 +255,40 @@ export const asyncRoutes = [
         hidden: true
       },
     ]
+  },
+  {
+    path: '/workflowManage',
+    component: Layout,
+    redirect: '/workflowManage',
+    alwaysShow: true,
+    name: 'WorkflowManage',
+    meta: {
+      title: 'WorkflowManage',
+      icon: 'workflow',
+      roles: ['admin']
+    },
+    children: [
+      {
+        path: 'modelerDesign',
+        component: () => import('@/views/workflowManage/modelerDesign'),
+        name: 'modelerDesign',
+        meta: {
+          title: 'modelerDesign',
+          roles: ['admin']
+        }
+      },
+      // {
+      //   path: 'gateway',
+      //   component: () => import('@/views/systemManage/gateway'),
+      //   name: 'gateway',
+      //   meta: {
+      //     title: 'gateway',
+      //     roles: ['admin']
+      //   }
+      // }
+    ]
   }
-]
+];
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
