@@ -21,8 +21,5 @@
 var ACTIVITI = ACTIVITI || {};
 
 ACTIVITI.CONFIG = {
-	'contextRoot' : (function () {
-	  console.log(window.parent.getMyVue.apiUrl);
-    return window.parent.getMyVue.apiUrl;
-  }),
+	'contextRoot' : 'http://127.0.0.1:8769/workflow/api/activiti'
 };

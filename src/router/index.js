@@ -269,14 +269,24 @@ export const asyncRoutes = [
     },
     children: [
       {
-        path: 'modelerDesign',
+        path: 'modelerDesign/:id(\\d+)',
         component: () => import('@/views/workflowManage/modelerDesign'),
         name: 'modelerDesign',
         meta: {
           title: 'modelerDesign',
           roles: ['admin']
-        }
+        },
+        hidden: true
       },
+      {
+        path: 'modelList',
+        component: () => import('@/views/workflowManage/modelList'),
+        name: 'modelList',
+        meta: {
+          title: 'modelList',
+          roles: ['admin']
+        }
+      }
       // {
       //   path: 'gateway',
       //   component: () => import('@/views/systemManage/gateway'),

@@ -1,7 +1,7 @@
 /*
  * Activiti Modeler component part of the Activiti project
  * Copyright 2005-2014 Alfresco Software, Ltd. All rights reserved.
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -32,12 +32,14 @@ var KisBpmAssignmentCtrl = [ '$scope', '$modal','$http', function($scope, $modal
     $modal(opts);
 }];
 
+const apiUrl = 'http://127.0.0.1:8769/admin';
+
 var KisBpmAssignmentPopupCtrl = [ '$scope','$modal', function($scope, $modal) {
-    	
+
     // Put json representing assignment on scope
     if ($scope.property.value !== undefined && $scope.property.value !== null
         && $scope.property.value.assignment !== undefined
-        && $scope.property.value.assignment !== null) 
+        && $scope.property.value.assignment !== null)
     {
         $scope.assignment = $scope.property.value.assignment;
     } else {
@@ -54,7 +56,7 @@ var KisBpmAssignmentPopupCtrl = [ '$scope','$modal', function($scope, $modal) {
     {
         $scope.assignment.assignee =  '';
     }
-    
+
     // Click handler for + button after enum value
     var userValueIndex = 1;
     $scope.addCandidateUserValue = function(index) {
@@ -65,12 +67,12 @@ var KisBpmAssignmentPopupCtrl = [ '$scope','$modal', function($scope, $modal) {
     $scope.removeCandidateUserValue = function(index) {
         $scope.assignment.candidateUsers.splice(index, 1);
     };
-    
+
     if ($scope.assignment.candidateGroups == undefined || $scope.assignment.candidateGroups.length == 0)
     {
     	$scope.assignment.candidateGroups = [{value: ''}];
     }
-    
+
     var groupValueIndex = 1;
     $scope.addCandidateGroupValue = function(index) {
         $scope.assignment.candidateGroups.splice(index + 1, 0, {value: 'value ' + groupValueIndex++});
@@ -108,7 +110,7 @@ var KisBpmAssignmentPopupCtrl = [ '$scope','$modal', function($scope, $modal) {
         $scope.property.value = {};
         handleAssignmentInput($scope);
         $scope.property.value.assignment = $scope.assignment;
-        
+
         $scope.updatePropertyInModel($scope.property);
         $scope.close();
     };
@@ -119,7 +121,7 @@ var KisBpmAssignmentPopupCtrl = [ '$scope','$modal', function($scope, $modal) {
     	$scope.property.mode = 'read';
     	$scope.$hide();
     };
-    
+
     var handleAssignmentInput = function($scope) {
     	if ($scope.assignment.candidateUsers)
     	{
@@ -136,18 +138,18 @@ var KisBpmAssignmentPopupCtrl = [ '$scope','$modal', function($scope, $modal) {
 	        		toRemoveIndexes[toRemoveIndexes.length] = i;
 	        	}
 	        }
-	        
+
 	        for (var i = 0; i < toRemoveIndexes.length; i++)
 	        {
 	        	$scope.assignment.candidateUsers.splice(toRemoveIndexes[i], 1);
 	        }
-	        
+
 	        if (emptyUsers)
 	        {
 	        	$scope.assignment.candidateUsers = undefined;
 	        }
     	}
-        
+
     	if ($scope.assignment.candidateGroups)
     	{
 	        var emptyGroups = true;
@@ -163,12 +165,12 @@ var KisBpmAssignmentPopupCtrl = [ '$scope','$modal', function($scope, $modal) {
 	        		toRemoveIndexes[toRemoveIndexes.length] = i;
 	        	}
 	        }
-	        
+
 	        for (var i = 0; i < toRemoveIndexes.length; i++)
 	        {
 	        	$scope.assignment.candidateGroups.splice(toRemoveIndexes[i], 1);
 	        }
-	        
+
 	        if (emptyGroups)
 	        {
 	        	$scope.assignment.candidateGroups = undefined;
@@ -242,7 +244,7 @@ var KisBpmChoseAssignmentCtrl = ['$scope', '$http', function($scope, $http) {
             method: 'get',
             headers: {'Accept': 'application/json',
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
-            url: '/api/getRoles/noPage'})
+            url: apiUrl + '/api/systemRole/getSystemRoles/noPage'})
 
             .success(function (data, status, headers, config) {
                 var obj = data.data;
@@ -267,10 +269,10 @@ var KisBpmChoseAssignmentCtrl = ['$scope', '$http', function($scope, $http) {
             method: 'get',
             headers: {'Accept': 'application/json',
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
-            url: '/api/getUserByRoleId?roleId=' + value + "&page=" + page + "&limit=" + limit})
+            url: apiUrl + '/api/systemUser/getSystemUsers?roleId=' + value + "&start=" + page + "&pageSize=" + limit})
             .success(function (data, status, headers, config) {
                 //封装数据
-                var obj = data.data.rows;
+                var obj = data.data.data;
                 if (obj != null) {
                     var accounts = [];
                     for (var i = 0; i < obj.length; i++) {
@@ -366,7 +368,7 @@ var KisBpmChoseCandidateGroupsCtrl = ['$scope', '$http', function($scope, $http)
             method: 'get',
             headers: {'Accept': 'application/json',
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
-            url: '/api/getRoles/noPage'})
+            url: '/admin/api/systemRole/getSystemRoles/noPage'})
             .success(function (data, status, headers, config) {
                 var obj = data.data;
                 for (var i=0; i<obj.length; i++) {

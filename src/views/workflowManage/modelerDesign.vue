@@ -1,9 +1,5 @@
 <template>
-  <div class="full-screen">
-    <div class="main-section flex-column">
-      <iframe ref="activit" width="100%" height="100%" :src="src" style="border:none"></iframe>
-    </div>
-  </div>
+  <iframe ref="activit" width="100%" height="850" :src="src" style="border:none"></iframe>
 </template>
 <script>
     import config from '@/config'
@@ -11,7 +7,8 @@
     export default {
         computed: {
             src() {
-                return '/modeler.html?modelId=1';
+                const id = this.$route.params && this.$route.params.id
+                return '/modeler.html?modelId=' + id;
             },
             token() {
                 return getToken();
