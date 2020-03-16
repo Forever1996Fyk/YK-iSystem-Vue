@@ -75,3 +75,65 @@ export function synchronizeData() {
     method: 'post'
   })
 }
+
+/**
+ * 根据模型id部署
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function deployByModelId(data) {
+  return request({
+    url: '/workflow/api/activiti/deployByModelId/' + data,
+    method: 'post'
+  })
+}
+
+/**
+ * 流程管理列表
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function getActProcessDeploys(data) {
+  return request({
+    url: '/workflow/api/activiti/getProcessDeploys',
+    method: 'get',
+    params: data
+  })
+}
+
+/**
+ * 根据流程部署id启动流程
+ * @param deploymentId
+ * @returns {AxiosPromise}
+ */
+export function startProcess(deploymentId) {
+  return request({
+    url: '/workflow/api/activiti/startProcess/' + deploymentId,
+    method: 'post'
+  })
+}
+
+/**
+ * 根据流程部署id删除流程定义 级联 删除流程节点绑定信息
+ * @param deploymentId
+ * @returns {AxiosPromise}
+ */
+export function delProcessDeploy(deploymentId) {
+  return request({
+    url: '/workflow/api/activiti/delProcessDeploy/' + deploymentId,
+    method: 'delete'
+  })
+}
+
+/**
+ * 根据流程部署id删除流程定义 级联 删除流程节点绑定信息
+ * @param deploymentId
+ * @returns {AxiosPromise}
+ */
+export function delProcessDeploys(deploymentIds) {
+  return request({
+    url: '/workflow/api/activiti/delProcessDeploy/' + deploymentIds,
+    method: 'delete'
+  })
+}
+

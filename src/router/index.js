@@ -5,6 +5,7 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
+import workflowRouter from '@/router/modules/workflow'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -256,48 +257,76 @@ export const asyncRoutes = [
       },
     ]
   },
-  {
-    path: '/workflowManage',
-    component: Layout,
-    redirect: '/workflowManage',
-    alwaysShow: true,
-    name: 'WorkflowManage',
-    meta: {
-      title: 'WorkflowManage',
-      icon: 'workflow',
-      roles: ['admin']
-    },
-    children: [
-      {
-        path: 'modelerDesign/:id(\\d+)',
-        component: () => import('@/views/workflowManage/modelerDesign'),
-        name: 'modelerDesign',
-        meta: {
-          title: 'modelerDesign',
-          roles: ['admin']
-        },
-        hidden: true
-      },
-      {
-        path: 'modelList',
-        component: () => import('@/views/workflowManage/modelList'),
-        name: 'modelList',
-        meta: {
-          title: 'modelList',
-          roles: ['admin']
-        }
-      }
-      // {
-      //   path: 'gateway',
-      //   component: () => import('@/views/systemManage/gateway'),
-      //   name: 'gateway',
-      //   meta: {
-      //     title: 'gateway',
-      //     roles: ['admin']
-      //   }
-      // }
-    ]
-  }
+  workflowRouter
+  // {
+  //   path: '/workflowManage',
+  //   component: Layout,
+  //   redirect: '/workflowManage',
+  //   alwaysShow: true,
+  //   name: 'WorkflowManage',
+  //   meta: {
+  //     title: 'WorkflowManage',
+  //     icon: 'workflow',
+  //     roles: ['admin']
+  //   },
+  //   children: [
+  //     {
+  //       path: 'modelerDesign/:id(\\d+)',
+  //       component: () => import('@/views/workflowManage/workflow/modelerDesign'),
+  //       name: 'modelerDesign',
+  //       meta: {
+  //         title: 'modelerDesign',
+  //         roles: ['admin']
+  //       },
+  //       hidden: true
+  //     },
+  //     {
+  //       path: 'modelList',
+  //       component: () => import('@/views/workflowManage/workflow/modelList'),
+  //       name: 'modelList',
+  //       meta: {
+  //         title: 'modelList',
+  //         roles: ['admin']
+  //       }
+  //     },
+  //     {
+  //       path: 'processList',
+  //       component: () => import('@/views/workflowManage/workflow/processList'),
+  //       name: 'modelList',
+  //       meta: {
+  //         title: 'modelList',
+  //         roles: ['admin']
+  //       }
+  //     },
+  //     {
+  //       path: 'leave',
+  //       component: () => import('@/views/workflowManage/workflow/modelList'),
+  //       name: 'modelList',
+  //       meta: {
+  //         title: 'modelList',
+  //         roles: ['admin']
+  //       }
+  //     },
+  //     {
+  //       path: 'modelList',
+  //       component: () => import('@/views/workflowManage/workflow/modelList'),
+  //       name: 'modelList',
+  //       meta: {
+  //         title: 'modelList',
+  //         roles: ['admin']
+  //       }
+  //     }
+  //     // {
+  //     //   path: 'gateway',
+  //     //   component: () => import('@/views/systemManage/gateway'),
+  //     //   name: 'gateway',
+  //     //   meta: {
+  //     //     title: 'gateway',
+  //     //     roles: ['admin']
+  //     //   }
+  //     // }
+  //   ]
+  // }
 ];
 
 const createRouter = () => new Router({

@@ -11,24 +11,6 @@
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button>
-      <el-button
-        class="filter-item"
-        style="margin-left: 10px;"
-        type="primary"
-        icon="el-icon-plus"
-        @click="handleCreate"
-      >
-        {{ $t('table.add') }}
-      </el-button>
-      <el-button
-        class="filter-item"
-        style="margin-left: 10px;"
-        type="success"
-        icon="el-icon-plus"
-        @click="synchronizeData"
-      >
-        {{ $t('table.add') }}
-      </el-button>
 
       <el-button
         class="filter-item"
@@ -44,45 +26,72 @@
               style="width: 100%">
 
       <el-table-column type="selection" width="55"/>
-      <el-table-column :label="$t('table.modelId')">
+      <el-table-column :label="$t('table.processId')">
         <template slot-scope="{row}">
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
-
-      <el-table-column :label="$t('table.modelName')" align="center">
+      <el-table-column :label="$t('table.name')" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.name }}</span>
+          <span>{{ row.deploymentName }}</span>
         </template>
       </el-table-column>
-
-      <el-table-column width="180" align="center" :label="$t('table.modelKey')">
+      <el-table-column width="180" align="center" :label="$t('table.processKey')">
         <template slot-scope="{row}">
           <span>{{ row.key }}</span>
         </template>
       </el-table-column>
+      <el-table-column width="180" align="center" :label="$t('table.version')">
+        <template slot-scope="{row}">
+          <span>{{ row.version }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('table.deploymentTime')" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.deploymentTime }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column width="180" align="center" :label="$t('table.category')">
+        <template slot-scope="{row}">
+          <span>{{ row.category }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column width="180" align="center" :label="$t('table.resourceName')">
+        <template slot-scope="{row}">
+          <span>{{ row.resourceName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column class-name="status-col" :label="$t('table.status')" width="110">
+        <template slot-scope="{row}">
+          <el-tag :type="row.status | statusTagFilter">
+            {{ row.status | statusFilter}}
+          </el-tag>
+        </template>
+      </el-table-column>
+
       <el-table-column fixed="right" :label="$t('table.actions')" align="center" class-name="small-padding fixed-width"
                        width="280">
         <template slot-scope="{row}">
-          <router-link :to="'/workflowManage/modelerDesign/'+row.id">
-            <el-button type="success" icon="el-icon-s-tools">
-              {{ $t('table.designFlow') }}
-            </el-button>
-          </router-link>
           <el-dropdown trigger="click" @command="handleCommand">
             <el-button type="primary">
               操作<i class="el-icon-arrow-down el-icon--right"></i>
             </el-button>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item icon="el-icon-delete" command="del">{{ $t('table.delete') }}</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-s-promotion" :command="composeValue('startProcess', row.deploymentId)">{{ $t('table.startProcess') }}</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-delete" :command="composeValue('del', row.deploymentId)">{{ $t('table.delete') }}</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit"
-                @pagination="getList"/>
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="listQuery.start"
+      :limit.sync="listQuery.pageSize"
+      @pagination="getList"
+    />
 
     <el-dialog :title="formTitle[dialogStatus]" :visible.sync="dialogFormVisible">
       <!-- rules表示表单验证规则 -->
@@ -122,27 +131,40 @@
         </el-button>
       </div>
     </el-dialog>
+    <router-view/>
   </div>
 </template>
 
 <script>
-    import {getModels, delModel, createNewModel, delModelByIds, synchronizeData} from '@/api/workflow'
+    import {getActProcessDeploys, startProcess, delProcessDeploy, delProcessDeploys} from '@/api/workflow'
     import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
     import waves from '@/directive/waves'
     import baseData from '@/config/baseData'
 
     export default {
-        name: 'ModelList',
+        name: 'ProcessList',
         components: {Pagination},
         directives: {waves},
-        filters: {},
+        filters: {
+            statusTagFilter(status) {
+                const statusMap = {
+                    1: 'success',
+                    2: 'info',
+                    0: 'danger'
+                };
+                return statusMap[status];
+            },
+            statusFilter(status) {
+                return baseData.filterKeyValue(baseData.processStatus)[status];
+            },
+        },
         data() {
             return {
                 list: null,
                 total: 0,
                 listLoading: true,
                 listQuery: {
-                    page: 1,
+                    start: 1,
                     pageSize: 20
                 },
                 formData: {
@@ -168,9 +190,15 @@
             this.getList()
         },
         methods: {
+            composeValue(key, vaule) {
+                return {
+                    'key': key,
+                    'value': vaule
+                }
+            },
             getList() {
                 this.listLoading = true;
-                getModels(this.listQuery).then(response => {
+                getActProcessDeploys(this.listQuery).then(response => {
                     console.log(response.data);
                     this.list = response.data.list;
                     this.total = response.data.total;
@@ -186,20 +214,21 @@
                     key: null
                 }
             },
-            handleCreate() {
-                this.resetTemp()
-                this.dialogStatus = 'add'
-                this.dialogFormVisible = true
-                this.$nextTick(() => {
-                    this.$refs['dataForm'].clearValidate()
-                })
-            },
             handleCommand(command) {
-                switch (command) {
+                console.log(command);
+                switch (command.key) {
                     case 'del':
-                        this.handleDelete();
+                        this.handleDelete(command.value);
+                        break;
+                    case 'startProcess':
+                        this.startProcess(command.value);
                         break;
                 }
+            },
+            startProcess(id) {
+                startProcess(id).then((res) => {
+                    this.$message.success(res.message);
+                })
             },
             handleFilter() {
                 this.listQuery.page = 1
@@ -224,12 +253,12 @@
                     type: 'warning'
                 }).then(() => {
                     if (data instanceof Array) {
-                        delModelByIds(data).then((res) => {
+                        delProcessDeploys(data).then((res) => {
                             this.getList()
                             this.$message.success(res.message)
                         })
                     } else {
-                        delModel(data).then((res) => {
+                        delProcessDeploy(data).then((res) => {
                             this.getList()
                             this.$message.success(res.message)
                         })
@@ -238,24 +267,6 @@
                     this.$message.info('已取消')
                 })
             },
-            addSave() {
-                this.$refs['dataForm'].validate((valid) => {
-                    if (valid) {
-                        console.log(this.formData);
-                        createNewModel(this.formData).then((res) => {
-                            this.$message.success(res.message);
-                            this.getList();
-                            this.dialogFormVisible = false
-                        })
-                    }
-                })
-            },
-            synchronizeData() {
-                synchronizeData().then((res) => {
-                    this.$message.success(res.message);
-                    this.getList();
-                })
-            }
         }
     }
 </script>

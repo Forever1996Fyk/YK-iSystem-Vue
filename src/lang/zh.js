@@ -10,6 +10,7 @@ export default {
     systemApi: '系统api',
     UserManage: '用户管理',
     WorkflowManage: '协同管理',
+    workflow: '工作流程',
     modelerDesign: '流程设计器',
     systemUser: '系统用户',
     systemAuthority: '系统权限',
@@ -18,7 +19,10 @@ export default {
     ArticleManage: '文章管理',
     createArticle: '创建文章',
     articleList: '文章列表',
-    modelList: '模型列表'
+    modelList: '模型列表',
+    processList: '流程列表',
+    runningProcessList: '运行中流程',
+    hisrotyProcessList: '历史流程',
   },
   navbar: {
     dashboard: '首页',
@@ -142,7 +146,19 @@ export default {
     designFlow: '设计流程图',
     modelId: '模型id',
     modelName: '模型名称',
-    modelKey: '模型key'
+    modelKey: '模型key',
+    synchronizeData: '同步数据',
+    description: '描述',
+    deploy: '部署',
+    startProcess: '启动流程',
+    processId: '流程id',
+    processName: '流程名称',
+    processKey: '流程key',
+    version: '版本',
+    deploymentId: '部署id',
+    category: '类别',
+    resourceName: '资源名称',
+    deploymentTime: '部署时间'
   },
   example: {
     warning: '创建和编辑页面是不能被 keep-alive 缓存的，因为keep-alive 的 include 目前不支持根据路由来缓存，所以目前都是基于 component name 来进行缓存的。如果你想类似的实现缓存效果，可以使用 localStorage 等浏览器缓存方案。或者不要使用 keep-alive 的 include，直接缓存所有页面。详情见'
