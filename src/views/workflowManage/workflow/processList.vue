@@ -93,44 +93,6 @@
       @pagination="getList"
     />
 
-    <el-dialog :title="formTitle[dialogStatus]" :visible.sync="dialogFormVisible">
-      <!-- rules表示表单验证规则 -->
-      <el-form ref="dataForm" :rules="rules" :model="formData" label-width="100px">
-        <el-row>
-          <el-col :span="12">
-            <el-form-item :label="$t('table.modelName')" prop="modelName">
-              <el-input v-model="formData.name"/>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="12">
-            <el-form-item :label="$t('table.modelKey')" prop="modelKey">
-              <el-input v-model="formData.key"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item :label="$t('table.description')" prop="description">
-              <el-input
-                v-model="formData.description"
-                :autosize="{ minRows: 4, maxRows: 8}"
-                type="textarea"
-                placeholder="Please input"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">
-          {{ $t('table.cancel') }}
-        </el-button>
-        <el-button type="primary" @click="dialogStatus==='add'?addSave():editSave()">
-          {{ $t('table.confirm') }}
-        </el-button>
-      </div>
-    </el-dialog>
     <router-view/>
   </div>
 </template>
@@ -227,6 +189,7 @@
             },
             startProcess(id) {
                 startProcess(id).then((res) => {
+                    this.getList();
                     this.$message.success(res.message);
                 })
             },
