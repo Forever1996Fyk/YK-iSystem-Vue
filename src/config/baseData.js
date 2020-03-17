@@ -35,9 +35,9 @@ module.exports = {
     {key: 2, value: '草稿'},
   ],
   processStatus: [
-    {key: 0, value: '未启动'},
     {key: 1, value: '已激活'},
     {key: 2, value: '已挂起'},
+    {key: 0, value: '已结束'},
   ],
   menuLevel: [
     {key: 1, value: '菜单'},

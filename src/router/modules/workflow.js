@@ -60,15 +60,35 @@ const workflowRouter = {
         //     roles: ['admin']
         //   }
         // },
-        // {
-        //   path: 'hisrotyProcessList',
-        //   component: () => import('@/views/workflowManage/workflow/hisrotyProcessList'),
-        //   name: 'hisrotyProcessList',
-        //   meta: {
-        //     title: 'processList',
-        //     roles: ['admin']
-        //   }
-        // },
+        {
+          path: 'historyProcessList',
+          component: () => import('@/views/workflowManage/workflow/historyProcessList'),
+          name: 'historyProcessList',
+          meta: {
+            title: 'historyProcessList',
+            roles: ['admin']
+          }
+        },
+      ]
+    },
+    {
+      path: 'applyApprove',
+      component: () => import('@/views/workflowManage/index'),
+      name: 'applyApprove',
+      meta: {
+        title: 'applyApprove'
+      },
+      children: [
+      ]
+    },
+    {
+      path: 'taskManage',
+      component: () => import('@/views/workflowManage/index'),
+      name: 'taskManage',
+      meta: {
+        title: 'taskManage'
+      },
+      children: [
       ]
     }
   ]

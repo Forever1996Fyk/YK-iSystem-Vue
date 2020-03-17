@@ -114,26 +114,51 @@ export function startProcess(deploymentId) {
 }
 
 /**
- * 根据流程部署id删除流程定义 级联 删除流程节点绑定信息
+ * 根据流程实例id激活流程
  * @param deploymentId
  * @returns {AxiosPromise}
  */
-export function delProcessDeploy(deploymentId) {
+export function activateProcess(processInstanceId) {
   return request({
-    url: '/workflow/api/activiti/delProcessDeploy/' + deploymentId,
-    method: 'delete'
+    url: '/workflow/api/activiti/activateProcess/' + processInstanceId,
+    method: 'post'
   })
 }
 
 /**
- * 根据流程部署id删除流程定义 级联 删除流程节点绑定信息
+ * 根据流程实例id挂起流程
  * @param deploymentId
  * @returns {AxiosPromise}
  */
-export function delProcessDeploys(deploymentIds) {
+export function pendProcess(processInstanceId) {
   return request({
-    url: '/workflow/api/activiti/delProcessDeploy/' + deploymentIds,
-    method: 'delete'
+    url: '/workflow/api/activiti/pendProcess/' + processInstanceId,
+    method: 'post'
   })
 }
 
+/**
+ * 根据流程实例id删除流程示例
+ * @param deploymentId
+ * @returns {AxiosPromise}
+ */
+export function deleteProcessInstance(data) {
+  return request({
+    url: '/workflow/api/activiti/deleteProcessInstance',
+    method: 'delete',
+    params: data
+  })
+}
+
+/**
+ * 历史流程管理列表
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function getHistoryProcess(data) {
+  return request({
+    url: '/workflow/api/activiti/getHistoryProcess',
+    method: 'get',
+    params: data
+  })
+}

@@ -11,49 +11,44 @@
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button>
-
-      <el-button
-        class="filter-item"
-        style="margin-left: 10px;"
-        type="danger"
-        icon="el-icon-delete"
-        @click="handleBatchDelete"
-      >
-        {{ $t('table.delete') }}
-      </el-button>
     </div>
     <el-table v-loading="listLoading" ref="multipleTable" :data="list" border fit highlight-current-row
               style="width: 100%">
 
       <el-table-column type="selection" width="55"/>
-      <el-table-column :label="$t('table.processId')">
+      <el-table-column :label="$t('table.processInstanceId')">
         <template slot-scope="{row}">
-          <span>{{ row.id }}</span>
+          <span>{{ row.processInstanceId }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.name')" align="center">
+      <el-table-column :label="$t('table.processDefinitionId')">
+        <template slot-scope="{row}">
+          <span>{{ row.processDefinitionId }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column width="180" align="center" :label="$t('table.processDefinitionKey')">
+        <template slot-scope="{row}">
+          <span>{{ row.processDefinitionKey }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column width="180" align="center" :label="$t('table.processDefinitionVersion')">
+        <template slot-scope="{row}">
+          <span>{{ row.processDefinitionVersion }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('table.deploymentName')" align="center">
         <template slot-scope="{row}">
           <span>{{ row.deploymentName }}</span>
         </template>
       </el-table-column>
-      <el-table-column width="180" align="center" :label="$t('table.processKey')">
-        <template slot-scope="{row}">
-          <span>{{ row.key }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column width="180" align="center" :label="$t('table.version')">
-        <template slot-scope="{row}">
-          <span>{{ row.version }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('table.deploymentTime')" align="center">
+      <el-table-column :label="$t('table.deploymentTime')" align="center" width="170">
         <template slot-scope="{row}">
           <span>{{ row.deploymentTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column width="180" align="center" :label="$t('table.category')">
+      <el-table-column width="180" align="center" :label="$t('table.diagramResourceName')">
         <template slot-scope="{row}">
-          <span>{{ row.category }}</span>
+          <span>{{ row.diagramResourceName }}</span>
         </template>
       </el-table-column>
       <el-table-column width="180" align="center" :label="$t('table.resourceName')">
@@ -70,15 +65,18 @@
       </el-table-column>
 
       <el-table-column fixed="right" :label="$t('table.actions')" align="center" class-name="small-padding fixed-width"
-                       width="280">
+                       width="180">
         <template slot-scope="{row}">
           <el-dropdown trigger="click" @command="handleCommand">
-            <el-button type="primary">
+            <el-button type="primary" :disabled="is_disabled">
               操作<i class="el-icon-arrow-down el-icon--right"></i>
             </el-button>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item icon="el-icon-s-promotion" :command="composeValue('startProcess', row.deploymentId)">{{ $t('table.startProcess') }}</el-dropdown-item>
-              <el-dropdown-item icon="el-icon-delete" :command="composeValue('del', row.deploymentId)">{{ $t('table.delete') }}</el-dropdown-item>
+              <el-dropdown-item :icon="getIconByStatus(row.status)"
+                                :command="getCommandByStatus(row)">
+                {{ $t(getTableNameByStatus(row.status)) }}
+              </el-dropdown-item>
+              <el-dropdown-item icon="el-icon-delete" :command="composeValue('del', row.processInstanceId)">{{ $t('table.delete') }}</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </template>
@@ -98,7 +96,7 @@
 </template>
 
 <script>
-    import {getActProcessDeploys, startProcess, delProcessDeploy, delProcessDeploys} from '@/api/workflow'
+    import {getActProcessDeploys, deleteProcessInstance, pendProcess, activateProcess} from '@/api/workflow'
     import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
     import waves from '@/directive/waves'
     import baseData from '@/config/baseData'
@@ -112,7 +110,7 @@
                 const statusMap = {
                     1: 'success',
                     2: 'info',
-                    0: 'danger'
+                    0: 'danger',
                 };
                 return statusMap[status];
             },
@@ -145,13 +143,41 @@
                 rules: {
                     name: [{required: true, message: '模型名称必填', trigger: 'change'}],
                     key: [{required: true, message: '模型key必填', trigger: 'change'}],
-                }
+                },
+                is_disabled: false
             }
         },
         created() {
             this.getList()
         },
         methods: {
+            getIconByStatus(data) {
+                var icon = 'el-icon-s-promotion';
+                if (data === 1) {
+                    icon = 'el-icon-remove-outline';
+                    return icon;
+                } else if (data === 2) {
+                    return icon;
+                } else {
+                    return icon;
+                }
+            },
+            getCommandByStatus(row) {
+                if (row.status === 1) {
+                    return this.composeValue('pending', row.processInstanceId);
+                } else if (row.status === 2) {
+                    return this.composeValue('active', row.processInstanceId);
+                } else {
+                    return this.composeValue('end', row.processInstanceId);
+                }
+            },
+            getTableNameByStatus(data) {
+                if (data === 1) {
+                    return 'table.pendProcess';
+                } else {
+                    return 'table.activeProcess';
+                }
+            },
             composeValue(key, vaule) {
                 return {
                     'key': key,
@@ -161,7 +187,7 @@
             getList() {
                 this.listLoading = true;
                 getActProcessDeploys(this.listQuery).then(response => {
-                    console.log(response.data);
+                    console.log(response.data.list);
                     this.list = response.data.list;
                     this.total = response.data.total;
                     this.listLoading = false
@@ -182,15 +208,32 @@
                     case 'del':
                         this.handleDelete(command.value);
                         break;
-                    case 'startProcess':
-                        this.startProcess(command.value);
+                    case 'active':
+                        this.activateProcess(command.value);
                         break;
+                    case 'pending':
+                        this.pendProcess(command.value);
+                        break;
+                    case 'end':
+                        this.$message.error('该流程已结束!');
+                        break;
+
                 }
             },
-            startProcess(id) {
-                startProcess(id).then((res) => {
+            activateProcess(id) {
+                this.is_disabled = true;
+                activateProcess(id).then((res) => {
                     this.getList();
                     this.$message.success(res.message);
+                    this.is_disabled = false;
+                })
+            },
+            pendProcess(id) {
+                this.is_disabled = true;
+                pendProcess(id).then((res) => {
+                    this.getList();
+                    this.$message.success(res.message);
+                    this.is_disabled = false;
                 })
             },
             handleFilter() {
@@ -216,12 +259,12 @@
                     type: 'warning'
                 }).then(() => {
                     if (data instanceof Array) {
-                        delProcessDeploys(data).then((res) => {
+                        deleteProcessInstances(data).then((res) => {
                             this.getList()
                             this.$message.success(res.message)
                         })
                     } else {
-                        delProcessDeploy(data).then((res) => {
+                        deleteProcessInstance(data).then((res) => {
                             this.getList()
                             this.$message.success(res.message)
                         })
