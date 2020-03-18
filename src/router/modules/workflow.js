@@ -68,7 +68,7 @@ const workflowRouter = {
             title: 'historyProcessList',
             roles: ['admin']
           }
-        },
+        }
       ]
     },
     {
@@ -79,6 +79,24 @@ const workflowRouter = {
         title: 'applyApprove'
       },
       children: [
+        {
+          path: 'userLeave',
+          component: () => import('@/views/workflowManage/applyApprove/userLeave'),
+          name: 'userLeave',
+          meta: {
+            title: 'userLeave',
+            roles: ['admin']
+          }
+        },
+        {
+          path: 'userLeave1',
+          component: () => import('@/views/workflowManage/applyApprove/userLeave1'),
+          name: 'userLeave',
+          meta: {
+            title: 'userLeave',
+            roles: ['admin']
+          }
+        },
       ]
     },
     {

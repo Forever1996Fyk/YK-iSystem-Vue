@@ -101,10 +101,12 @@
     import {getArticles, delArticleByIds, delArticle} from '@/api/article'
     import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
     import baseData from '@/config/baseData'
+    import waves from '@/directive/waves'
 
     export default {
         name: 'ArticleList',
         components: {Pagination},
+        directives: {waves},
         filters: {
             statusTagFilter(status) {
                 const statusMap = {
