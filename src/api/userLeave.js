@@ -10,7 +10,7 @@ import request from '@/utils/request'
  */
 export function addUserLeave(data) {
   return request({
-    url: '/business/api/userLeave/addUserLeave',
+    url: '/workflow/api/userLeave/addUserLeave',
     method: 'post',
     data
   })
@@ -23,7 +23,7 @@ export function addUserLeave(data) {
  */
 export function getUserLeaveById(id) {
   return request({
-    url: '/business/api/userLeave/getUserLeaveById',
+    url: '/workflow/api/userLeave/getUserLeaveById',
     method: 'get',
     params: { id }
   })
@@ -35,7 +35,7 @@ export function getUserLeaveById(id) {
  */
 export function editUserLeave(data) {
   return request({
-    url: '/business/api/userLeave/editUserLeave',
+    url: '/workflow/api/userLeave/editUserLeave',
     method: 'put',
     data
   })
@@ -47,7 +47,7 @@ export function editUserLeave(data) {
  */
 export function delUserLeave(id) {
   return request({
-    url: '/business/api/userLeave/delUserLeave',
+    url: '/workflow/api/userLeave/delUserLeave',
     method: 'delete',
     params: { id }
   })
@@ -59,7 +59,7 @@ export function delUserLeave(id) {
  */
 export function delUserLeaveByIds(ids) {
   return request({
-    url: '/business/api/userLeave/delUserLeave/' + ids,
+    url: '/workflow/api/userLeave/delUserLeave/' + ids,
     method: 'delete'
   })
 }
@@ -71,7 +71,7 @@ export function delUserLeaveByIds(ids) {
  */
 export function getUserLeavesNoPage(data) {
   return request({
-    url: '/business/api/userLeave/getUserLeaves/noPage',
+    url: '/workflow/api/userLeave/getUserLeaves/noPage',
     method: 'get',
     params: data
   })
@@ -84,7 +84,7 @@ export function getUserLeavesNoPage(data) {
  */
 export function getUserLeaves(data) {
   return request({
-    url: '/business/api/userLeave/getUserLeaves',
+    url: '/workflow/api/userLeave/getUserLeaves',
     method: 'get',
     params: data
   })

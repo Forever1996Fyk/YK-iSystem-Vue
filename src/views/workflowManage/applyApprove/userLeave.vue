@@ -152,7 +152,7 @@
         getUserLeaves
     } from '@/api/userLeave'
     import baseData from '@/config/baseData'
-    import {DateDiff} from '@/config'
+    import {formatDate} from '@/utils'
     import moment from 'moment'
 
     export default {
@@ -276,6 +276,8 @@
                 this.$refs['dataForm'].validate((valid) => {
                     if (valid) {
                         console.log(this.formData);
+                        this.formData.startTime = formatDate(this.formData.startTime, "yyyy-MM-dd hh:mm:ss");
+                        this.formData.endTime= formatDate(this.formData.endTime, "yyyy-MM-dd hh:mm:ss");
                         addUserLeave(this.formData).then((res) => {
                             this.$message.success(res.message);
                             this.getList();
