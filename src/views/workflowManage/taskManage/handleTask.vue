@@ -1,48 +1,48 @@
 <template>
   <div class="createPost-container">
-    <el-tabs @tab-click="changeTabs">
-      <el-tab-pane :label="$t('tagsView.ApplicationMatters')" name="first">
+    <el-tabs @tab-click="changeTabs" v-model="activeName">
+      <el-tab-pane :label="$t('tagsView.ApplicationMatters')" name="applicationMatters">
           <div class="createPost-main-container">
             <el-form ref="formData" :model="formData" :rules="rules" label-width="100px">
               <el-row>
                 <el-col :span="12">
                   <el-form-item :label="$t('table.applyUserName')">
-                    <el-input v-model="formData.userName"/>
+                    <el-input v-model="formData.userName" readonly/>
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item :label="$t('table.leaveType')">
-                    <el-input v-model="formData.leaveType"/>
+                    <el-input v-model="formData.leaveType" readonly/>
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="12">
                   <el-form-item :label="$t('table.startTime')">
-                    <el-input v-model="formData.startTime"/>
+                    <el-input v-model="formData.startTime" readonly/>
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item :label="$t('table.endTime')">
-                    <el-input v-model="formData.endTime"/>
+                    <el-input v-model="formData.endTime" readonly/>
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="12">
                   <el-form-item :label="$t('table.leaveDays')">
-                    <el-input v-model="formData.leaveDays"/>
+                    <el-input v-model="formData.leaveDays" readonly/>
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="24">
-                  <el-form-item :label="$t('table.reason')" prop="reason">
+                  <el-form-item :label="$t('table.reason')" prop="reason" >
                     <el-input
                       v-model="formData.reason"
                       :autosize="{ minRows: 4, maxRows: 8}"
                       type="textarea"
-                      placeholder="Please input"
+                      placeholder="Please input" readonly
                     />
                   </el-form-item>
                 </el-col>
@@ -51,7 +51,23 @@
               <el-row>
                 <el-col :span="24">
                   <el-form-item prop="approveMsg" :label="$t('table.approveMsg')" style="margin-bottom: 30px;">
-                    <Tinymce ref="editor" v-model="formData.approveMsg" :height="400"/>
+                    <Tinymce ref="editor" v-model="formData.approveMsg" :height="200"/>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+
+              <el-row>
+                <el-col :span="24">
+                  <el-form-item>
+                    <el-button type="primary">
+                      {{ $t('button.approve') }}
+                    </el-button>
+                    <el-button type="info" >
+                      {{ $t('button.turnDown') }}
+                    </el-button>
+                    <el-button type="danger">
+                      {{ $t('button.invalid') }}
+                    </el-button>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -75,35 +91,35 @@
         components: {Tinymce, MDinput, Upload},
         data() {
             return {
+                activeName: 'applicationMatters',
                 formData: {
                     id: '',
                     userName: null,
                     leaveType: null,
+                    leaveDays: null,
                     startTime: null,
                     endTime: null,
                     reason: null,
                     approveMsg: null
                 },
+                readonly: true,
                 rules: {
                     content: [{required: true, message: '审批信息必填', trigger: 'change'}],
                 }
             }
         },
         created() {
-            const id = this.$route.params && this.$route.params.id;
-            this.getUserLeaveById(id);
+            const obj = this.$route.query.obj;
+            this.getUserLeaveById(JSON.parse(obj));
         },
         methods: {
             changeTabs() {
 
             },
-            getUserLeaveById(id) {
-                getUserLeaveById(id).then(response => {
-                    console.log(response.data);
-                    this.formData = response.data;
-                }).catch(err => {
-                    console.log(err)
-                })
+            getUserLeaveById(obj) {
+                this.formData = obj;
+                this.formData.leaveType = obj.params.leaveType;
+                this.formData.leaveDays = obj.params.leaveDays;
             },
         }
     }

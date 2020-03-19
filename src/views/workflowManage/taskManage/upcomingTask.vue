@@ -66,7 +66,7 @@
       </el-table-column>
       <el-table-column :label="$t('table.actions')" align="center" class-name="small-padding fixed-width" width="230">
         <template slot-scope="{row}">
-          <router-link :to="'/workflowManage/taskManage/handleTask/' + row.id">
+          <router-link :to="{path: '/workflowManage/taskManage/handleTask', query: {obj: JSON.stringify(row)}}">
             <el-button type="primary" size="mini">
               {{ $t('table.handle') }}
             </el-button>
@@ -133,13 +133,6 @@
                     add: this.$t('Add')
                 },
                 whetherOptions: baseData.whetherOptions,
-                rules: {
-                    startTime: [{required: true, message: '开始时间必填', trigger: 'change'}],
-                    endTime: [{required: true, message: '结束时间必填', trigger: 'change'}],
-                    reason: [{required: true, message: '请假原因必填', trigger: 'change'}],
-                    urlPath: [{required: true, message: '请假路径必填', trigger: 'change'}],
-                    leaveType: [{required: true, message: '请假类型必填', trigger: 'change'}],
-                }
             }
         },
         created() {

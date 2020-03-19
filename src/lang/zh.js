@@ -233,4 +233,9 @@ export default {
     fixedHeader: '固定 Header',
     sidebarLogo: '侧边栏 Logo'
   },
+  button: {
+    approve: '批准',
+    turnDown: '驳回',
+    invalid: '作废',
+  }
 }

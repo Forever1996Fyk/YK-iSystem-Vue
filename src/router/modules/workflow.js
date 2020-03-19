@@ -98,7 +98,7 @@ const workflowRouter = {
           }
         },
         {
-          path: 'handleTask/:id(\\d+)',
+          path: 'handleTask',
           component: () => import('@/views/workflowManage/taskManage/handleTask'),
           name: 'handleTask',
           meta: {
