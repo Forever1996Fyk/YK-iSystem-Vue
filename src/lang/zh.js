@@ -25,7 +25,10 @@ export default {
     processList: '流程列表',
     runningProcessList: '运行中流程',
     historyProcessList: '历史流程',
-    userLeave: '请假流程'
+    userLeave: '请假流程',
+    upcomingTask: '待办任务',
+    doneTask: '已办任务',
+    handleTask: '办理任务'
   },
   navbar: {
     dashboard: '首页',
@@ -178,7 +181,18 @@ export default {
     duration: '持续时间',
     reason: '原因',
     leaveDays: '请假天数',
+    leaveType: '请假类型',
     urlPath: '请假路径',
+    submitApply: '提交申请',
+    reSubmitApply: '重新提交',
+    cancelApply: '取消申请',
+    applyUserName: '申请人',
+    taskId: '任务id',
+    assignee: '委派人',
+    createTime: '创建时间',
+    handle: '办理',
+    taskName: '当前任务',
+    approveMsg: '审批意见'
   },
   example: {
     warning: '创建和编辑页面是不能被 keep-alive 缓存的，因为keep-alive 的 include 目前不支持根据路由来缓存，所以目前都是基于 component name 来进行缓存的。如果你想类似的实现缓存效果，可以使用 localStorage 等浏览器缓存方案。或者不要使用 keep-alive 的 include，直接缓存所有页面。详情见'
@@ -209,7 +223,8 @@ export default {
     refresh: '刷新',
     close: '关闭',
     closeOthers: '关闭其它',
-    closeAll: '关闭所有'
+    closeAll: '关闭所有',
+    ApplicationMatters: '申请事项'
   },
   settings: {
     title: '系统布局配置',
@@ -217,5 +232,5 @@ export default {
     tagsView: '开启 Tags-View',
     fixedHeader: '固定 Header',
     sidebarLogo: '侧边栏 Logo'
-  }
+  },
 }

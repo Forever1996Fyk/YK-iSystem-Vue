@@ -29,6 +29,15 @@ module.exports = {
     {key: 5, value: '硕士'},
     {key: 6, value: '博士'}
   ],
+  leaveTypeOption: [
+    {key: 0, value: '事假'},
+    {key: 1, value: '婚假'},
+    {key: 2, value: '产假'},
+    {key: 3, value: '病假'},
+    {key: 4, value: '公假'},
+    {key: 5, value: '年假'},
+    {key: 6, value: '其他'},
+  ],
   articleStatus: [
     {key: 0, value: '已删除'},
     {key: 1, value: '已发布'},

@@ -72,6 +72,44 @@ const workflowRouter = {
       ]
     },
     {
+      path: 'taskManage',
+      component: () => import('@/views/workflowManage/index'),
+      name: 'taskManage',
+      meta: {
+        title: 'taskManage'
+      },
+      children: [
+        {
+          path: 'upcomingTask',
+          component: () => import('@/views/workflowManage/taskManage/upcomingTask'),
+          name: 'upcomingTask',
+          meta: {
+            title: 'upcomingTask',
+            roles: ['admin', 'cusotmer']
+          }
+        },
+        {
+          path: 'doneTask',
+          component: () => import('@/views/workflowManage/taskManage/doneTask'),
+          name: 'doneTask',
+          meta: {
+            title: 'doneTask',
+            roles: ['admin', 'cusotmer']
+          }
+        },
+        {
+          path: 'handleTask/:id(\\d+)',
+          component: () => import('@/views/workflowManage/taskManage/handleTask'),
+          name: 'handleTask',
+          meta: {
+            title: 'handleTask',
+            roles: ['admin', 'cusotmer']
+          },
+          hidden: true
+        },
+      ]
+    },
+    {
       path: 'applyApprove',
       component: () => import('@/views/workflowManage/index'),
       name: 'applyApprove',
@@ -85,7 +123,7 @@ const workflowRouter = {
           name: 'userLeave',
           meta: {
             title: 'userLeave',
-            roles: ['admin']
+            roles: ['admin', 'cusotmer']
           }
         },
         {
@@ -94,21 +132,11 @@ const workflowRouter = {
           name: 'userLeave',
           meta: {
             title: 'userLeave',
-            roles: ['admin']
+            roles: ['admin', 'cusotmer']
           }
         },
       ]
     },
-    {
-      path: 'taskManage',
-      component: () => import('@/views/workflowManage/index'),
-      name: 'taskManage',
-      meta: {
-        title: 'taskManage'
-      },
-      children: [
-      ]
-    }
   ]
 };
 

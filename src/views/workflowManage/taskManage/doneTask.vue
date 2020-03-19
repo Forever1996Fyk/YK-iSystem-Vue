@@ -71,9 +71,9 @@
       </el-table-column>
       <el-table-column :label="$t('table.actions')" align="center" class-name="small-padding fixed-width" width="230">
         <template slot-scope="{row}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
-            {{ $t('table.edit') }}
-          </el-button>
+<!--          <el-button type="primary" size="mini" @click="handleUpdate(row)">-->
+<!--            {{ $t('table.edit') }}-->
+<!--          </el-button>-->
           <el-button size="mini" type="danger" @click="handleDelete(row.id)">
             {{ $t('table.delete') }}
           </el-button>
@@ -140,11 +140,8 @@
         <el-button @click="dialogFormVisible = false">
           {{ $t('table.cancel') }}
         </el-button>
-        <el-button type="primary" @click="dialogStatus==='add'?addSave():updateTask(true)">
-          {{ dialogStatus==='add'?$t('table.submitApply'): $t('table.reSubmitApply')}}
-        </el-button>
-        <el-button v-if="dialogStatus==='edit'" type="danger" @click="updateTask(false)">
-          {{ $t('table.cancelApply')}}
+        <el-button type="primary" @click="dialogStatus==='add'?addSave():editSave()">
+          {{ $t('table.confirm') }}
         </el-button>
       </div>
     </el-dialog>
@@ -161,9 +158,6 @@
         delUserLeaveByIds,
         getUserLeaves
     } from '@/api/userLeave'
-    import {
-        updateTask
-    } from '@/api/taskManage'
     import baseData from '@/config/baseData'
     import {formatDate} from '@/utils'
     import moment from 'moment'
@@ -302,12 +296,16 @@
                     }
                 })
             },
-            updateTask(pass) {
-                updateTask(this.formData.taskId, 'leave', pass).then((res) => {
-                    if (pass) {
-                        this.$message.success(res.message);
-                    } else {
-                        this.$message.warning(res.message);
+            editSave() {
+                this.$refs['dataForm'].validate((valid) => {
+                    if (valid) {
+                        console.log(this.formData);
+                        editUserLeave(this.formData).then((res) => {
+                            console.log(res);
+                            this.$message.success(res.message);
+                            this.getList();
+                            this.dialogFormVisible = false;
+                        })
                     }
                 })
             },
