@@ -69,6 +69,11 @@
           <span>{{ row.leaveDays }}</span>
         </template>
       </el-table-column>
+      <el-table-column :label="$t('table.taskName')" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.taskName }}</span>
+        </template>
+      </el-table-column>
       <el-table-column :label="$t('table.actions')" align="center" class-name="small-padding fixed-width" width="230">
         <template slot-scope="{row}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">

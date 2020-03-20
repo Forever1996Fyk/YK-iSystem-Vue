@@ -32,6 +32,32 @@ export function getDoneTasks(data) {
 }
 
 /**
+ * 获取申请事项
+ *
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function getApplicationMatters(taskId) {
+  return request({
+    url: '/workflow/api/activiti/getApplicationMatters/' + taskId,
+    method: 'get'
+  })
+}
+
+/**
+ * 获取历史申请事项
+ *
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function getHisApplicationMatters(executionId) {
+  return request({
+    url: '/workflow/api/activiti/getHisApplicationMatters/' + executionId,
+    method: 'get'
+  })
+}
+
+/**
  * 获取已办任务列表
  * @param taskId
  * @param type
@@ -51,10 +77,11 @@ export function updateTask(taskId, type, pass) {
  * @param pass
  * @returns {AxiosPromise}
  */
-export function completeTask(taskId, pass) {
+export function completeTask(taskId, pass, data) {
   return request({
     url: '/workflow/api/activiti/completeTask/' + taskId + '/' + pass,
     method: 'post',
+    data
   })
 }
 

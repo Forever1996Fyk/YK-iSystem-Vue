@@ -66,7 +66,7 @@
       </el-table-column>
       <el-table-column :label="$t('table.actions')" align="center" class-name="small-padding fixed-width" width="230">
         <template slot-scope="{row}">
-          <router-link :to="{path: '/workflowManage/taskManage/handleTask', query: {obj: JSON.stringify(row)}}">
+          <router-link :to="{path: '/workflowManage/taskManage/handleTask/',query:{id: row.id, type: 'upcomingTask'}}">
             <el-button type="primary" size="mini">
               {{ $t('table.handle') }}
             </el-button>

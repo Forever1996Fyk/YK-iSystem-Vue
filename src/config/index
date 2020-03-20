@@ -9,5 +9,14 @@ module.exports = {
     pro: ''
   },
 
-  INDEX_PAGE: 'index'
+  INDEX_PAGE: 'index',
+
+  proxyTable: {
+    '/api': {
+      target: 'http://127.0.0.1:8080',
+      timeout: 6*60*10000,		//设置超时
+      changeOrigin: true
+    }
+
+  },
 };
