@@ -89,7 +89,7 @@
     import Pagination from '@/components/Pagination' // secondary package based on el-pagination
     import waves from '@/directive/waves'
     import {
-        getUpcomingTasks,completeTask,getHighLightProcImage,getApproveInfo
+        getUpcomingTasks
     } from '@/api/taskManage'
     import baseData from '@/config/baseData'
 
@@ -168,82 +168,6 @@
                     urlPath: null,
                 }
             },
-            handleCreate() {
-                this.resetTemp();
-                this.dialogStatus = 'add';
-                this.dialogFormVisible = true;
-                this.$nextTick(() => {
-                    this.$refs['dataForm'].clearValidate();
-                })
-            },
-            handleUpdate(data) {
-                this.formData = Object.assign({}, data);// copy obj
-                this.dialogStatus = 'edit';
-                this.dialogFormVisible = true;
-                this.$nextTick(() => {
-                    this.$refs['dataForm'].clearValidate();
-                })
-            },
-            addSave() {
-                this.$refs['dataForm'].validate((valid) => {
-                    if (valid) {
-                        console.log(this.formData);
-                        this.formData.startTime = formatDate(this.formData.startTime, "yyyy-MM-dd hh:mm:ss");
-                        this.formData.endTime= formatDate(this.formData.endTime, "yyyy-MM-dd hh:mm:ss");
-                        addUserLeave(this.formData).then((res) => {
-                            this.$message.success(res.message);
-                            this.getList();
-                            this.dialogFormVisible = false;
-                        })
-                    }
-                })
-            },
-            editSave() {
-                this.$refs['dataForm'].validate((valid) => {
-                    if (valid) {
-                        console.log(this.formData);
-                        editUserLeave(this.formData).then((res) => {
-                            console.log(res);
-                            this.$message.success(res.message);
-                            this.getList();
-                            this.dialogFormVisible = false;
-                        })
-                    }
-                })
-            },
-            handleDelete(data) {
-                this.$confirm('确定删除该数据吗?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    if (data instanceof Array) {
-                        delUserLeaveByIds(data).then((res) => {
-                            this.getList();
-                            this.$message.success('res.message');
-                        })
-                    } else {
-                        delUserLeave(data).then((res) => {
-                            this.getList();
-                            this.$message.success('res.message');
-                        });
-                    }
-                }).catch(() => {
-                    this.$message.info("已取消");
-                })
-            },
-            handleBatchDelete() {
-                var datas = this.$refs.multipleTable.selection;
-                var ids = [];
-                if (datas.length === 0) {
-                    this.$message.error('请选择至少一条数据');
-                    return
-                }
-                for (var i = 0; i < datas.length; i++) {
-                    ids.push(datas[i].id);
-                }
-                this.handleDelete(ids);
-            }
         }
     }
 </script>

@@ -142,13 +142,13 @@
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">
+        <el-button @click="dialogFormVisible = false" :disabled="disabled">
           {{ $t('table.cancel') }}
         </el-button>
-        <el-button type="primary" @click="dialogStatus==='add'?addSave():updateTask(true)">
+        <el-button type="primary" @click="dialogStatus==='add'?addSave():updateTask(true)" :disabled="disabled">
           {{ dialogStatus==='add'?$t('table.submitApply'): $t('table.reSubmitApply')}}
         </el-button>
-        <el-button v-if="dialogStatus==='edit'" type="danger" @click="updateTask(false)">
+        <el-button v-if="dialogStatus==='edit'" type="danger" @click="updateTask(false)" :disabled="disabled">
           {{ $t('table.cancelApply')}}
         </el-button>
       </div>
@@ -219,7 +219,8 @@
                     reason: [{required: true, message: '请假原因必填', trigger: 'change'}],
                     urlPath: [{required: true, message: '请假路径必填', trigger: 'change'}],
                     leaveType: [{required: true, message: '请假类型必填', trigger: 'change'}],
-                }
+                },
+                disabled: false,
             }
         },
         created() {
@@ -299,21 +300,27 @@
                         console.log(this.formData);
                         this.formData.startTime = formatDate(this.formData.startTime, "yyyy-MM-dd hh:mm:ss");
                         this.formData.endTime= formatDate(this.formData.endTime, "yyyy-MM-dd hh:mm:ss");
+                        this.disabled = true;
                         addUserLeave(this.formData).then((res) => {
                             this.$message.success(res.message);
                             this.getList();
                             this.dialogFormVisible = false;
+                        }).finally(() => {
+                            this.disabled = false;
                         })
                     }
                 })
             },
             updateTask(pass) {
+                this.disabled = true;
                 updateTask(this.formData.taskId, 'leave', pass).then((res) => {
                     if (pass) {
                         this.$message.success(res.message);
                     } else {
                         this.$message.warning(res.message);
                     }
+                }).finally(() => {
+                    this.disabled = false;
                 })
             },
             handleDelete(data) {

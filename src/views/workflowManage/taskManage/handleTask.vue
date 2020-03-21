@@ -227,6 +227,10 @@
                         this.disabled = true;
                         completeTask(this.formData.taskId, pass, this.formData).then((res) => {
                             this.$message.success(res.message);
+                            this.$store.dispatch('tagsView/delView', this.$route)
+                            // 返回上一步路由
+                            this.$router.go(-1);
+                        }).finally(() => {
                             this.disabled = false;
                         })
                     }

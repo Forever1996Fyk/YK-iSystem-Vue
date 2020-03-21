@@ -18,6 +18,7 @@
         type="primary"
         icon="el-icon-plus"
         @click="handleCreate"
+        :disabled="disabled"
       >
         {{ $t('table.add') }}
       </el-button>
@@ -27,6 +28,7 @@
         type="success"
         icon="el-icon-refresh"
         @click="synchronizeData"
+        :disabled="disabled"
       >
         {{ $t('table.synchronizeData') }}
       </el-button>
@@ -37,6 +39,7 @@
         type="danger"
         icon="el-icon-delete"
         @click="handleBatchDelete"
+        :disabled="disabled"
       >
         {{ $t('table.delete') }}
       </el-button>
@@ -66,7 +69,7 @@
                        width="280">
         <template slot-scope="{row}">
           <router-link :to="'/workflowManage/workflow/modelerDesign/'+row.id">
-            <el-button type="success" icon="el-icon-s-tools">
+            <el-button type="success" icon="el-icon-s-tools" :disabled="disabled">
               {{ $t('table.designFlow') }}
             </el-button>
           </router-link>
@@ -121,10 +124,10 @@
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">
+        <el-button @click="dialogFormVisible = false" >
           {{ $t('table.cancel') }}
         </el-button>
-        <el-button type="primary" @click="dialogStatus==='add'?addSave():editSave()">
+        <el-button type="primary" @click="dialogStatus==='add'?addSave():editSave()" :disabled="disabled">
           {{ $t('table.confirm') }}
         </el-button>
       </div>
@@ -136,7 +139,6 @@
     import {getModels, delModel, createNewModel, delModelByIds, synchronizeData, deployByModelId} from '@/api/workflow'
     import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
     import waves from '@/directive/waves'
-    import baseData from '@/config/baseData'
 
     export default {
         name: 'ModelList',
@@ -168,7 +170,8 @@
                 rules: {
                     name: [{required: true, message: '模型名称必填', trigger: 'change'}],
                     key: [{required: true, message: '模型key必填', trigger: 'change'}],
-                }
+                },
+                disabled: false
             }
         },
         created() {
@@ -219,8 +222,11 @@
                 }
             },
             deployModel(id) {
+                this.disabled = true;
                 deployByModelId(id).then((res) => {
                     this.$message.success(res.message);
+                }).finally(() => {
+                    this.disabled = false;
                 })
             },
             handleFilter() {
@@ -264,18 +270,24 @@
                 this.$refs['dataForm'].validate((valid) => {
                     if (valid) {
                         console.log(this.formData);
+                        this.disabled = true;
                         createNewModel(this.formData).then((res) => {
                             this.$message.success(res.message);
                             this.getList();
                             this.dialogFormVisible = false
+                        }).finally(() => {
+                            this.disabled = false;
                         })
                     }
                 })
             },
             synchronizeData() {
+                this.disabled = true;
                 synchronizeData().then((res) => {
                     this.$message.success(res.message);
                     this.getList();
+                }).finally(() => {
+                    this.disabled = false;
                 })
             }
         }

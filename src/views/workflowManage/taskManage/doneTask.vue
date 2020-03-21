@@ -67,8 +67,8 @@
       <el-table-column :label="$t('table.actions')" align="center" class-name="small-padding fixed-width" width="230">
         <template slot-scope="{row}">
           <router-link :to="{path: '/workflowManage/taskManage/handleTask/',query:{id: row.executionId, type: 'doneTask'}}">
-            <el-button type="primary" size="mini">
-              {{ $t('table.handle') }}
+            <el-button type="primary">
+              {{ $t('table.processInfo') }}
             </el-button>
           </router-link>
         </template>
