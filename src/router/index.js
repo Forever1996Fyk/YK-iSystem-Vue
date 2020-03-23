@@ -154,6 +154,15 @@ export const asyncRoutes = [
           title: 'gateway',
           roles: ['admin']
         }
+      },
+      {
+        path: 'taskScheduler',
+        component: () => import('@/views/systemManage/taskScheduler'),
+        name: 'taskScheduler',
+        meta: {
+          title: 'taskScheduler',
+          roles: ['admin']
+        }
       }
     ]
   },
