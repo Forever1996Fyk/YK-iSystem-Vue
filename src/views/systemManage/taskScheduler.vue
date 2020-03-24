@@ -23,7 +23,7 @@
 
       <el-button
         class="filter-item"
-        style="margin-left: 10px;"
+        style="margin-left: 10px; display: none"
         type="danger"
         icon="el-icon-delete"
         @click="handleBatchDelete"
@@ -49,12 +49,17 @@
       </el-table-column>
       <el-table-column :label="$t('table.jobGroupName')">
         <template slot-scope="{row}">
-          <span>{{ row.jobGroupName }}</span>
+          <span>{{ row.jobGroupName | jobGroupFilter}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('table.jobClassName')" align="center" width="200">
+        <template slot-scope="{row}">
+          <span>{{ row.jobClassName | descFilter }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('table.jobTrigger')" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.jobTrigger }}</span>
+          <span>{{ row.jobTrigger | jobTriggerFilter}}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('table.cronExpression')" align="center">
@@ -72,27 +77,31 @@
           {{ row.repeatCount }}
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.startTime')" align="center">
+      <el-table-column :label="$t('table.startTime')" align="center" width="200">
         <template slot-scope="{row}">
           {{ row.startTime }}
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.endTime')" align="center">
+      <el-table-column :label="$t('table.endTime')" align="center" width="200">
         <template slot-scope="{row}">
           {{ row.endTime }}
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.jobStatus')" align="center">
+      <el-table-column :label="$t('table.status')" align="center">
         <template slot-scope="{row}">
-          {{ row.jobStatus }}
+          <el-tag :type="row.status | statusTagFilter">{{ row.status | statusFilter}}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.actions')" align="center" class-name="small-padding fixed-width">
+      <el-table-column fixed="right" :label="$t('table.actions')" align="center" class-name="small-padding fixed-width"
+                       width="230">
         <template slot-scope="{row}">
           <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleUpdate(row)">
             {{ $t('table.edit') }}
           </el-button>
-          <el-button size="mini" type="danger" icon="el-icon-delete" @click="handleDelete(row.id)">
+          <el-button :type="row.status === 1?'info':'success'" size="mini" :icon="row.status === 1?'el-icon-video-pause':'el-icon-video-play'" @click="handleTask(row)">
+            {{ row.status === 1 ? $t('table.pause'): $t('table.resume') }}
+          </el-button>
+          <el-button size="mini" type="danger" icon="el-icon-delete" @click="handleDelete(row)">
             {{ $t('table.delete') }}
           </el-button>
         </template>
@@ -116,61 +125,96 @@
               <el-input v-model="formData.jobName"/>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="6">
             <el-form-item :label="$t('table.jobGroupName')" prop="jobGroupName">
-              <el-input v-model="formData.jobGroupName"/>
+              <el-select v-model="formData.jobGroupName" class="filter-item" placeholder="Please select"
+                         style="width:100%">
+                <el-option key="default" label="默认" value="default"/>
+                <el-option key="system" label="系统" value="system"/>
+              </el-select>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="8">
-            <el-form-item :label="$t('table.jobClassName')" prop="jobClassName">
-              <el-input v-model="formData.jobClassName"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
+          <el-col :span="6">
             <el-form-item :label="$t('table.jobTrigger')" prop="jobTrigger">
               <el-select v-model="formData.jobTrigger" class="filter-item" placeholder="Please select"
-                         style="width:100%">
+                         style="width:100%" @change="changeJobTrigger" :disabled="disabled">
                 <el-option key="simple" label="简单任务" value="simple"/>
                 <el-option key="cron" label="定时任务" value="cron"/>
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
-            <el-form-item :label="$t('table.cronExpression')" prop="cronExpression">
-              <el-select
-                v-model="formData.cronExpression"
-                class="filter-item"
-                placeholder="Please select"
-                style="width:100%"
-              >
-                <el-option v-for="item in whetherOptions" :key="item.key" :label="item.value" :value="item.key"/>
-              </el-select>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item :label="$t('table.jobClassName')" prop="jobClassName">
+              <el-input v-model="formData.jobClassName"/>
+              <el-alert
+                title="任务类名标准"
+                type="warning"
+                show-icon>
+                <template>
+                  Bean调用示例：taskTest.taskNoParams();<br>
+                  Class类调用示例：com.yksys.isystem.service.system.task.TaskTest.taskNoParams();<br>
+                  参数说明：支持字符串，布尔类型，长整型，浮点型，整型"
+                </template>
+              </el-alert>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">
-            <el-form-item :label="$t('table.repeatInterval')" prop="repeatInterval">
+          <el-col :span="24">
+            <el-form-item :label="$t('table.cronExpression')" prop="cronExpression" v-if="cronVisible">
+              <el-popover v-model="cronPopover">
+                <el-input slot="reference" @click="cronPopover=true" v-model="formData.cronExpression"/>
+                <cron @change="changeCron" @close="cronPopover=false" i18n="cn"></cron>
+              </el-popover>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item :label="$t('table.misfirePolicy')" prop="misfirePolicy" v-if="cronVisible">
+              <el-radio-group v-model="formData.misfirePolicy" size="small">
+                <el-radio label="0" border>默认</el-radio>
+                <el-radio label="1" border>立即触发执行</el-radio>
+                <el-radio label="2" border>触发一次执行</el-radio>
+                <el-radio label="3" border>不触发立即执行</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8">
+            <el-form-item :label="$t('table.repeatInterval')" prop="repeatInterval" v-if="simpleVisible">
               <el-input v-model="formData.repeatInterval"/>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item :label="$t('table.repeatCount')" prop="repeatCount">
+          <el-col :span="8">
+            <el-form-item :label="$t('table.repeatCount')" prop="repeatCount" v-if="simpleVisible">
               <el-input v-model="formData.repeatCount"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item :label="$t('table.concurrent')" prop="concurrent">
+              <el-radio-group v-model="formData.concurrent" size="small">
+                <el-radio label="0" border>禁止</el-radio>
+                <el-radio label="1" border>允许</el-radio>
+              </el-radio-group>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item :label="$t('table.startTime')" prop="startTime">
-              <el-input v-model="formData.startTime"/>
+            <el-form-item :label="$t('table.startTime')" prop="startTime" v-if="simpleVisible">
+              <el-date-picker v-model="formData.startTime" type="datetime" format="yyyy-MM-dd HH:mm:ss"
+                              placeholder="Select date and time" style="width: 100%"/>
             </el-form-item>
           </el-col>
+
           <el-col :span="12">
-            <el-form-item :label="$t('table.endTime')" prop="endTime">
-              <el-input v-model="formData.endTime"/>
+            <el-form-item :label="$t('table.endTime')" prop="endTime" v-if="simpleVisible">
+              <el-date-picker v-model="formData.endTime" type="datetime" format="yyyy-MM-dd HH:mm:ss"
+                              placeholder="Select date and time" style="width: 100%"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -205,25 +249,57 @@
     import waves from '@/directive/waves'
     import {
         getJobs,
-        addJob,
-        editJob,
+        addLocalJob,
+        editLocalJob,
         deleteJob,
         pauseJob,
         resumeJob
     } from '@/api/taskScheduler'
     import baseData from '@/config/baseData'
+    import {formatDate} from '@/utils'
+    import {cron} from 'vue-cron';
 
     export default {
         name: 'TaskScheduler',
-        components: {Pagination},
+        components: {Pagination, cron},
         directives: {waves},
         filters: {
-            whetherFilter(type) {
-                var whetherFilterKeyValue = baseData.whetherOptions.reduce((acc, cur) => {
-                    acc[cur.key] = cur.value
-                    return acc
-                }, {})
-                return whetherFilterKeyValue[type]
+            statusTagFilter(status) {
+                const statusMap = {
+                    1: 'success',
+                    2: 'info',
+                    0: 'danger'
+                };
+                return statusMap[status];
+            },
+            descFilter(data) {
+                return baseData.descFilter(data);
+            },
+            jobGroupFilter(type) {
+                switch (type) {
+                    case 'default':
+                        return '默认';
+                    case 'system':
+                        return '系统';
+                }
+            },
+            jobTriggerFilter(type) {
+                switch (type) {
+                    case 'simple':
+                        return '简单任务';
+                    case 'cron':
+                        return '定时任务';
+                }
+            },
+            statusFilter(type) {
+                switch (type) {
+                    case 1:
+                        return '运行中';
+                    case 2:
+                        return '已暂停';
+                    case 0:
+                        return '已删除';
+                }
             }
         },
         data() {
@@ -247,10 +323,16 @@
                     repeatInterval: '',
                     repeatCount: '',
                     startTime: '',
-                    endTime: ''
+                    endTime: '',
+                    misfirePolicy: '',
+                    concurrent: '',
                 },
+                cronVisible: false,
+                simpleVisible: true,
                 dialogFormVisible: false,
+                disabled: false,
                 dialogStatus: '',
+                cronPopover: false,
                 formTitle: {
                     edit: this.$t('Edit'),
                     add: this.$t('Add')
@@ -261,7 +343,14 @@
                     jobClassName: [{required: true, message: '任务类名必填', trigger: 'change'}],
                     jobGroupName: [{required: true, message: '任务组名描述必填', trigger: 'change'}],
                     jobTrigger: [{required: true, message: '任务类型必填', trigger: 'change'}],
-                    jobDescription: [{required: true, message: '任务描述必填', trigger: 'change'}]
+                    jobDescription: [{required: true, message: '任务描述必填', trigger: 'change'}],
+                    cronExpression: [{required: true, message: 'cron表达式必填', trigger: 'change'}],
+                    repeatInterval: [{required: true, message: '间隔时间必填', trigger: 'change'}],
+                    repeatCount: [{required: true, message: '重复次数必填', trigger: 'change'}],
+                    startTime: [{required: true, message: '开始时间必填', trigger: 'change'}],
+                    endTime: [{required: true, message: '结束时间必填', trigger: 'change'}],
+                    misfirePolicy: [{required: true, message: '执行策略必填', trigger: 'change'}],
+                    concurrent: [{required: true, message: '并发执行必填', trigger: 'change'}],
                 }
             }
         },
@@ -269,6 +358,15 @@
             this.getList()
         },
         methods: {
+            changeJobTrigger() {
+                if (this.formData.jobTrigger === 'simple') {
+                    this.cronVisible = false;
+                    this.simpleVisible = true;
+                } else {
+                    this.cronVisible = true;
+                    this.simpleVisible = false;
+                }
+            },
             getList() {
                 this.listLoading = true
                 getJobs(this.listQuery).then(res => {
@@ -297,22 +395,29 @@
                     cronExpression: '',
                     repeatInterval: '',
                     repeatCount: '',
-                    startTime: '',
-                    endTime: ''
+                    startTime: null,
+                    endTime: null
                 }
+            },
+            changeCron(val){
+                this.formData.cronExpression=val;
             },
             handleCreate() {
                 this.resetTemp()
                 this.dialogStatus = 'add'
                 this.dialogFormVisible = true
+                this.disabled = false;
                 this.$nextTick(() => {
                     this.$refs['dataForm'].clearValidate()
                 })
             },
             handleUpdate(data) {
                 this.formData = Object.assign({}, data)// copy obj
+                console.log(this.formData);
                 this.dialogStatus = 'edit'
                 this.dialogFormVisible = true
+                this.disabled = true;
+                this.changeJobTrigger();
                 this.$nextTick(() => {
                     this.$refs['dataForm'].clearValidate()
                 })
@@ -321,7 +426,13 @@
                 this.$refs['dataForm'].validate((valid) => {
                     if (valid) {
                         console.log(this.formData)
-                        addJob(this.formData).then((res) => {
+                        if (this.formData.startTime) {
+                            this.formData.startTime = formatDate(this.formData.startTime, "yyyy-MM-dd hh:mm:ss");
+                        }
+                        if (this.formData.endTime) {
+                            this.formData.endTime = formatDate(this.formData.endTime, "yyyy-MM-dd hh:mm:ss");
+                        }
+                        addLocalJob(this.formData).then((res) => {
                             this.$message.success(res.message)
                             this.getList()
                             this.dialogFormVisible = false
@@ -333,7 +444,13 @@
                 this.$refs['dataForm'].validate((valid) => {
                     if (valid) {
                         console.log(this.formData)
-                        editJob(this.formData).then((res) => {
+                        if (this.formData.startTime) {
+                            this.formData.startTime = formatDate(this.formData.startTime, "yyyy-MM-dd hh:mm:ss");
+                        }
+                        if (this.formData.endTime) {
+                            this.formData.endTime = formatDate(this.formData.endTime, "yyyy-MM-dd hh:mm:ss");
+                        }
+                        editLocalJob(this.formData).then((res) => {
                             console.log(res)
                             this.$message.success(res.message)
                             this.getList()
@@ -348,13 +465,14 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
+                    console.log(data);
                     if (data instanceof Array) {
                         deleteJob(data).then((res) => {
                             this.getList()
                             this.$message.success(res.message)
                         })
                     } else {
-                        delGatewayRoute(data).then((res) => {
+                        deleteJob(data).then((res) => {
                             this.getList()
                             this.$message.success(res.message)
                         })
@@ -362,6 +480,38 @@
                 }).catch(() => {
                     this.$message.info('已取消')
                 })
+            },
+            handleTask(data) {
+                if (data.status === 1) {
+                    this.$confirm('确定暂停该任务吗?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        console.log(data);
+                        pauseJob(data).then((res) => {
+                            this.getList()
+                            this.$message.success(res.message)
+                        })
+                    }).catch(() => {
+                        this.$message.info('已取消')
+                    })
+                } else if (data.status === 2) {
+                    this.$confirm('确定重启该任务吗?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        console.log(data);
+                        resumeJob(data).then((res) => {
+                            this.getList()
+                            this.$message.success(res.message)
+                        })
+                    }).catch(() => {
+                        this.$message.info('已取消')
+                    })
+                }
+
             },
             handleBatchDelete() {
                 var datas = this.$refs.multipleTable.selection

@@ -34,9 +34,9 @@ export function getJobs(data) {
  * @param data
  * @returns {AxiosPromise}
  */
-export function addJob(data) {
+export function addLocalJob(data) {
   return request({
-    url: '/system/api/taskScheduler/addJob',
+    url: '/system/api/taskScheduler/addLocalJob',
     method: 'post',
     data
   })
@@ -47,9 +47,9 @@ export function addJob(data) {
  * @param data
  * @returns {AxiosPromise}
  */
-export function editJob(data) {
+export function editLocalJob(data) {
   return request({
-    url: '/system/api/taskScheduler/editJob',
+    url: '/system/api/taskScheduler/editLocalJob',
     method: 'put',
     data
   })
@@ -57,39 +57,36 @@ export function editJob(data) {
 
 /**
  * 删除任务
- * @param jobName
- * @param jobGroupName
+ * @param data
  * @returns {AxiosPromise}
  */
-export function deleteJob(jobName, jobGroupName) {
+export function deleteJob(data) {
   return request({
-    url: '/system/api/taskScheduler/deleteJob/' + jobName + '/' + jobGroupName,
+    url: '/system/api/taskScheduler/deleteJob/' + data.jobName + '/' + data.jobGroupName + '/' + data.id,
     method: 'delete',
   })
 }
 
 /**
  * 暂停定时任务
- * @param jobName
- * @param jobGroupName
+ * @param data
  * @returns {AxiosPromise}
  */
-export function pauseJob(jobName, jobGroupName) {
+export function pauseJob(data) {
   return request({
-    url: '/system/api/taskScheduler/pauseJob' + jobName + '/' + jobGroupName,
+    url: '/system/api/taskScheduler/pauseJob/' + data.jobName + '/' + data.jobGroupName + '/' + data.id,
     method: 'put',
   })
 }
 
 /**
  * 恢复任务
- * @param jobName
- * @param jobGroupName
+ * @param data
  * @returns {AxiosPromise}
  */
-export function resumeJob(jobName, jobGroupName) {
+export function resumeJob(data) {
   return request({
-    url: '/system/api/taskScheduler/resumeJob' + jobName + '/' + jobGroupName,
+    url: '/system/api/taskScheduler/resumeJob/' + data.jobName + '/' + data.jobGroupName + '/' + data.id,
     method: 'put',
   })
 }

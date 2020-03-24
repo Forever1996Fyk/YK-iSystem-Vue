@@ -200,12 +200,16 @@ export default {
     jobName: '任务名称',
     jobDescription: '任务描述',
     jobClassName: '任务类名',
-    jobGroupName: '任务分组名称',
+    jobGroupName: '任务组名',
     jobStatus: '任务状态',
     jobTrigger: '任务类型',
     cronExpression: '任务表达式',
     repeatInterval: '间隔时间',
     repeatCount: '重复次数',
+    misfirePolicy: '计划策略',
+    concurrent: '并发执行',
+    pause: '暂停',
+    resume: '恢复',
   },
   example: {
     warning: '创建和编辑页面是不能被 keep-alive 缓存的，因为keep-alive 的 include 目前不支持根据路由来缓存，所以目前都是基于 component name 来进行缓存的。如果你想类似的实现缓存效果，可以使用 localStorage 等浏览器缓存方案。或者不要使用 keep-alive 的 include，直接缓存所有页面。详情见'
