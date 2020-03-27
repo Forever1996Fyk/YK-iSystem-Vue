@@ -8,6 +8,8 @@ export default {
     genCode: '代码生成',
     gateway: '路由网关',
     taskScheduler: '任务调度',
+    actionLog: '操作日志',
+    taskLog: '任务日志',
     systemApi: '系统api',
     UserManage: '用户管理',
     WorkflowManage: '协同管理',
@@ -210,6 +212,14 @@ export default {
     concurrent: '并发执行',
     pause: '暂停',
     resume: '恢复',
+    jobMessage: '任务信息',
+    exceptionInfo:' 异常信息',
+    ipAddr: 'ip地址',
+    actionTime: '操作时间',
+    projectName: '项目名称',
+    inputParam: '输入参数',
+    outputParam: '输出参数',
+    log: '日志'
   },
   example: {
     warning: '创建和编辑页面是不能被 keep-alive 缓存的，因为keep-alive 的 include 目前不支持根据路由来缓存，所以目前都是基于 component name 来进行缓存的。如果你想类似的实现缓存效果，可以使用 localStorage 等浏览器缓存方案。或者不要使用 keep-alive 的 include，直接缓存所有页面。详情见'

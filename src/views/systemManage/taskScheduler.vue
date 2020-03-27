@@ -21,6 +21,16 @@
         {{ $t('table.add') }}
       </el-button>
 
+      <router-link :to="'/systemManage/taskLog/'">
+        <el-button
+          class="filter-item"
+          style="margin-left: 10px;"
+          type="success"
+          icon="el-icon-notebook-2">
+          {{ $t('table.log') }}
+        </el-button>
+      </router-link>
+
       <el-button
         class="filter-item"
         style="margin-left: 10px; display: none"
@@ -42,12 +52,12 @@
       style="width: 100%;"
     >
       <el-table-column type="selection" width="55"/>
-      <el-table-column :label="$t('table.jobName')" align="center">
+      <el-table-column :label="$t('table.jobName')" align="center" width="150">
         <template slot-scope="{row}">
           <span>{{ row.jobName }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.jobGroupName')">
+      <el-table-column :label="$t('table.jobGroupName')" align="center">
         <template slot-scope="{row}">
           <span>{{ row.jobGroupName | jobGroupFilter}}</span>
         </template>
@@ -62,7 +72,7 @@
           <span>{{ row.jobTrigger | jobTriggerFilter}}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.cronExpression')" align="center">
+      <el-table-column :label="$t('table.cronExpression')" align="center" width="200">
         <template slot-scope="{row}">
           {{ row.cronExpression }}
         </template>

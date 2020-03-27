@@ -163,6 +163,24 @@ export const asyncRoutes = [
           title: 'taskScheduler',
           roles: ['admin']
         }
+      },
+      {
+        path: 'actionLog',
+        component: () => import('@/views/systemManage/actionLog'),
+        name: 'actionLog',
+        meta: {
+          title: 'actionLog',
+          roles: ['admin']
+        }
+      },
+      {
+        path: 'taskLog',
+        component: () => import('@/views/systemManage/taskLog'),
+        name: 'taskLog',
+        meta: {
+          title: 'taskLog',
+          roles: ['admin']
+        }
       }
     ]
   },
