@@ -54,6 +54,11 @@ module.exports = {
     {key: 3, value: '按钮'},
     {key: 4, value: 'api接口'}
   ],
+  emailProtocols: [
+    {key: 'POP3', value: 'POP3'},
+    {key: 'SMTP', value: 'SMTP'},
+    {key: 'IMAP', value: 'IMAP'},
+  ],
   filterKeyValue(obj) {
     var result = obj.reduce((acc, cur) => {
       acc[cur.key] = cur.value;

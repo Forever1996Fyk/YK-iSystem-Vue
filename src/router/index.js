@@ -6,6 +6,7 @@ Vue.use(Router)
 /* Layout */
 import Layout from '@/layout'
 import workflowRouter from '@/router/modules/workflow'
+import emailManageRouter from '@/router/modules/emailManage'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -181,7 +182,8 @@ export const asyncRoutes = [
           title: 'taskLog',
           roles: ['admin']
         }
-      }
+      },
+      emailManageRouter
     ]
   },
   {
