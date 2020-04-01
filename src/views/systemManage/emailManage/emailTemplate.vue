@@ -54,7 +54,7 @@
       </el-table-column>
       <el-table-column :label="$t('table.configName')" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.configId }}</span>
+          <span>{{ row.configName }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('table.template')" align="center">
@@ -110,8 +110,11 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item :label="$t('table.configId')" prop="configId">
-              <el-input v-model="formData.configId"/>
+            <el-form-item :label="$t('table.configName')" prop="configId">
+              <el-select v-model="formData.configId" class="filter-item"
+                         placeholder="Please select" style="width:100%">
+                <el-option v-for="item in configIdOptions" :key="item.key" :label="item.value" :value="item.key"/>
+              </el-select>
             </el-form-item>
           </el-col>
 
@@ -164,6 +167,9 @@
         delEmailTemplateByIds,
         getEmailTemplates
     } from '@/api/emailTemplate'
+    import {
+        getEmailConfigsNoPage
+    } from '@/api/emailConfig'
     import baseData from '@/config/baseData'
 
     export default {
@@ -198,6 +204,7 @@
                     params: null,
                     remark: null,
                 },
+                configIdOptions: null,
                 dialogFormVisible: false,
                 dialogStatus: '',
                 formTitle: {
@@ -211,9 +218,22 @@
             }
         },
         created() {
-            this.getList()
+            this.getList();
+            this.getConfigIdOptions();
         },
         methods: {
+            getConfigIdOptions() {
+                this.configIdOptions = [];
+                getEmailConfigsNoPage().then((res) => {
+                    var data = res.data;
+                    if (data) {
+                        for (var i = 0; i < data.length; i++) {
+                            var obj = {key: data[i].id, value: data[i].name};
+                            this.configIdOptions.push(obj);
+                        }
+                    }
+                })
+            },
             getList() {
                 this.listLoading = true;
                 getEmailTemplates(this.listQuery).then(res => {

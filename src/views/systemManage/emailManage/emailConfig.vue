@@ -225,7 +225,11 @@
                 whetherOptions: baseData.whetherOptions,
                 emailProtocols: baseData.emailProtocols,
                 rules: {
-                    attrName: [{required: true, message: '必填', trigger: 'change'}],
+                    name: [{required: true, message: '配置名称必填', trigger: 'change'}],
+                    protocol: [{required: true, message: '配置协议必填', trigger: 'change'}],
+                    smtpHost: [{required: true, message: '协议域名必填', trigger: 'change'}],
+                    smtpUserName: [{required: true, message: '账号必填', trigger: 'change'}],
+                    smtpPassword: [{required: true, message: '授权码必填', trigger: 'change'}],
                 }
             }
         },

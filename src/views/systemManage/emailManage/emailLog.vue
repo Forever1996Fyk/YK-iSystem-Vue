@@ -11,25 +11,6 @@
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button>
-      <el-button
-        class="filter-item"
-        style="margin-left: 10px;"
-        type="primary"
-        icon="el-icon-plus"
-        @click="handleCreate"
-      >
-        {{ $t('table.add') }}
-      </el-button>
-
-      <el-button
-        class="filter-item"
-        style="margin-left: 10px;"
-        type="danger"
-        icon="el-icon-delete"
-        @click="handleBatchDelete"
-      >
-        {{ $t('table.delete') }}
-      </el-button>
     </div>
 
     <el-table
@@ -101,9 +82,6 @@
         <template slot-scope="{row}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             {{ $t('table.edit') }}
-          </el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(row.id)">
-            {{ $t('table.delete') }}
           </el-button>
         </template>
       </el-table-column>
