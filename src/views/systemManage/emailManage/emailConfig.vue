@@ -49,7 +49,7 @@
       </el-table-column>
       <el-table-column :label="$t('table.protocol')" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.protocol }}</span>
+          <span>{{ row.protocol | emailProtocolFilter}}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('table.smtpHost')" align="center">
@@ -69,7 +69,7 @@
       </el-table-column>
       <el-table-column :label="$t('table.isDefault')" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.isDefault }}</span>
+          <span>{{ row.isDefault | whetherFilter}}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('table.remark')" align="center">

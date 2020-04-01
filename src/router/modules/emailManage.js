@@ -19,20 +19,20 @@ const emailManageRouter = {
       }
     },
     {
-      path: 'emailLog',
-      component: () => import('@/views/systemManage/emailManage/emailLog'),
-      name: 'emailLog',
-      meta: {
-        title: 'emailLog',
-        roles: ['admin']
-      }
-    },
-    {
       path: 'emailTemplate',
       component: () => import('@/views/systemManage/emailManage/emailTemplate'),
       name: 'emailTemplate',
       meta: {
         title: 'emailTemplate',
+        roles: ['admin']
+      }
+    },
+    {
+      path: 'emailLog',
+      component: () => import('@/views/systemManage/emailManage/emailLog'),
+      name: 'emailLog',
+      meta: {
+        title: 'emailLog',
         roles: ['admin']
       }
     }
