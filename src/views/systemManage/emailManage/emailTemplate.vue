@@ -103,7 +103,7 @@
           </el-col>
 
           <el-col :span="12">
-            <el-form-item :label="$t('table.code')" prop="code">
+            <el-form-item :label="$t('table.tplCode')" prop="code">
               <el-input v-model="formData.code"/>
             </el-form-item>
           </el-col>
@@ -117,17 +117,16 @@
               </el-select>
             </el-form-item>
           </el-col>
-
-          <el-col :span="12">
-            <el-form-item :label="$t('table.template')" prop="template">
-              <el-input v-model="formData.template"/>
-            </el-form-item>
-          </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">
-            <el-form-item :label="$t('table.params')" prop="params">
-              <el-input v-model="formData.params"/>
+          <el-col :span="24">
+            <el-form-item :label="$t('table.template')" prop="template">
+              <el-input
+                v-model="formData.template"
+                :autosize="{ minRows: 4, maxRows: 8}"
+                type="textarea"
+                placeholder="Please input"
+              />
             </el-form-item>
           </el-col>
         </el-row>
