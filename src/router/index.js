@@ -7,6 +7,7 @@ Vue.use(Router)
 import Layout from '@/layout'
 import workflowRouter from '@/router/modules/workflow'
 import emailManageRouter from '@/router/modules/emailManage'
+import taskManageRouter from '@/router/modules/taskManage'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -157,15 +158,6 @@ export const asyncRoutes = [
         }
       },
       {
-        path: 'taskScheduler',
-        component: () => import('@/views/systemManage/taskScheduler'),
-        name: 'taskScheduler',
-        meta: {
-          title: 'taskScheduler',
-          roles: ['admin']
-        }
-      },
-      {
         path: 'actionLog',
         component: () => import('@/views/systemManage/actionLog'),
         name: 'actionLog',
@@ -174,15 +166,7 @@ export const asyncRoutes = [
           roles: ['admin']
         }
       },
-      {
-        path: 'taskLog',
-        component: () => import('@/views/systemManage/taskLog'),
-        name: 'taskLog',
-        meta: {
-          title: 'taskLog',
-          roles: ['admin']
-        }
-      },
+      taskManageRouter,
       emailManageRouter
     ]
   },

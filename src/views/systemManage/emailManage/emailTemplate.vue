@@ -57,9 +57,14 @@
           <span>{{ row.configName }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.template')" align="center">
+      <el-table-column :label="$t('table.template')" align="center" width="300">
         <template slot-scope="{row}">
           <span>{{ row.template }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('table.templateType')" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.type | templateTypeFilter}}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('table.tplParams')" align="center">
@@ -117,10 +122,25 @@
               </el-select>
             </el-form-item>
           </el-col>
+          <el-col :span="12">
+            <el-form-item :label="$t('table.templateType')" prop="type">
+              <el-select v-model="formData.type" class="filter-item"
+                         placeholder="Please select" style="width:100%">
+                <el-option v-for="item in templateTypeOptions" :key="item.key" :label="item.value" :value="item.key"/>
+              </el-select>
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
-            <el-form-item :label="$t('table.template')" prop="template">
+            <el-form-item :label="$t('table.template')" prop="template" v-if="formData.type === 2 || formData.type === 3">
+              <el-input v-model="formData.template"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item :label="$t('table.template')" prop="template" v-if="formData.type === 1">
               <el-input
                 v-model="formData.template"
                 :autosize="{ minRows: 4, maxRows: 8}"
@@ -176,12 +196,8 @@
         components: {Pagination},
         directives: {waves},
         filters: {
-            whetherFilter(type) {
-                var whetherFilterKeyValue = baseData.whetherOptions.reduce((acc, cur) => {
-                    acc[cur.key] = cur.value;
-                    return acc;
-                }, {});
-                return whetherFilterKeyValue[type];
+            templateTypeFilter(type) {
+                return baseData.filterKeyValue(baseData.templateType)[type];
             }
         },
         data() {
@@ -202,6 +218,7 @@
                     template: null,
                     params: null,
                     remark: null,
+                    type: null
                 },
                 configIdOptions: null,
                 dialogFormVisible: false,
@@ -210,7 +227,7 @@
                     edit: this.$t('Edit'),
                     add: this.$t('Add')
                 },
-                whetherOptions: baseData.whetherOptions,
+                templateTypeOptions: baseData.templateType,
                 rules: {
                     attrName: [{required: true, message: '必填', trigger: 'change'}],
                 }

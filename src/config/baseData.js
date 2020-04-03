@@ -59,6 +59,11 @@ module.exports = {
     {key: 'SMTP', value: 'SMTP'},
     {key: 'IMAP', value: 'IMAP'},
   ],
+  templateType: [
+    {key: 1, value: '文本模板'},
+    {key: 2, value: 'velocity模板'},
+    {key: 3, value: 'freemarker模板'},
+  ],
   filterKeyValue(obj) {
     var result = obj.reduce((acc, cur) => {
       acc[cur.key] = cur.value;

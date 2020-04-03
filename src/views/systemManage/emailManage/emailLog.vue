@@ -25,22 +25,22 @@
       <el-table-column type="selection" width="55"/>
       <el-table-column :label="$t('table.subject')" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.subject }}</span>
+          <span class="link-type" @click="handleView(row.subject, $t('table.subject'))">{{ row.subject | descFilter}}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.recipients')" align="center">
+      <el-table-column :label="$t('table.recipients')" align="center" width="200">
         <template slot-scope="{row}">
-          <span>{{ row.recipients }}</span>
+          <span class="link-type" @click="handleView(row.recipients, $t('table.recipients'))">{{ row.recipients | descFilter}}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.cc')" align="center">
+      <el-table-column :label="$t('table.cc')" align="center" width="200">
         <template slot-scope="{row}">
-          <span>{{ row.cc }}</span>
+          <span class="link-type" @click="handleView(row.cc, $t('table.cc'))">{{ row.cc | descFilter}}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.content')" align="center">
+      <el-table-column :label="$t('table.content')" align="center" width="200">
         <template slot-scope="{row}">
-          <span>{{ row.content }}</span>
+          <span class="link-type" @click="handleView(row.content, $t('table.content'))">点击查看内容</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('table.attachment')" align="center">
@@ -60,29 +60,22 @@
       </el-table-column>
       <el-table-column :label="$t('table.result')" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.result }}</span>
+          <span>{{ row.result ===1 ? '成功' : '失败'}}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.configId')" align="center">
+      <el-table-column :label="$t('table.config')" align="center" width="200">
         <template slot-scope="{row}">
-          <span>{{ row.configId }}</span>
+          <span class="link-type" @click="handleJsonView(row.config, $t('table.config'))">点击查看配置内容</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.tplId')" align="center">
+      <el-table-column :label="$t('table.tplName')" align="center" width="200">
         <template slot-scope="{row}">
-          <span>{{ row.tplId }}</span>
+          <span>{{ row.tplName }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('table.remark')" align="center">
         <template slot-scope="{row}">
           <span>{{ row.remark }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('table.actions')" align="center" class-name="small-padding fixed-width" width="230">
-        <template slot-scope="{row}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
-            {{ $t('table.edit') }}
-          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -95,95 +88,27 @@
       @pagination="getList"
     />
 
-    <el-dialog :title="formTitle[dialogStatus]" :visible.sync="dialogFormVisible">
+    <el-dialog :title="formTitle" :visible.sync="dialogFormVisible">
       <!-- rules表示表单验证规则 -->
-      <el-form ref="dataForm" :rules="rules" :model="formData" label-width="100px">
+      <el-form label-width="100px">
         <el-row>
-          <el-col :span="12">
-            <el-form-item :label="$t('table.subject')" prop="subject">
-              <el-input v-model="formData.subject"/>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="12">
-            <el-form-item :label="$t('table.recipients')" prop="recipients">
-              <el-input v-model="formData.recipients"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item :label="$t('table.cc')" prop="cc">
-              <el-input v-model="formData.cc"/>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="12">
-            <el-form-item :label="$t('table.content')" prop="content">
-              <el-input v-model="formData.content"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item :label="$t('table.attachment')" prop="attachment">
-              <el-input v-model="formData.attachment"/>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="12">
-            <el-form-item :label="$t('table.sendNum')" prop="sendNum">
-              <el-input v-model="formData.sendNum"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-        <el-row>
-          <el-col :span="12">
-            <el-form-item :label="$t('table.error')" prop="error">
-              <el-input v-model="formData.error"/>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="12">
-            <el-form-item :label="$t('table.result')" prop="result">
-              <el-input v-model="formData.result"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item :label="$t('table.configName')" prop="configId">
-              <el-input v-model="formData.configId"/>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="12">
-            <el-form-item :label="$t('table.tplName')" prop="tplId">
-              <el-input v-model="formData.tplId"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-        <el-row>
-          <el-col :span="24">
-            <el-form-item :label="$t('table.remark')" prop="remark">
-              <el-input
-                v-model="formData.remark"
-                :autosize="{ minRows: 4, maxRows: 8}"
-                type="textarea"
-                placeholder="Please input"
-              />
-            </el-form-item>
-          </el-col>
+          <div v-html="content"></div>
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">
           {{ $t('table.cancel') }}
         </el-button>
-        <el-button type="primary" @click="dialogStatus==='add'?addSave():editSave()">
-          {{ $t('table.confirm') }}
+      </div>
+    </el-dialog>
+
+    <el-dialog :title="formTitle" :visible.sync="dialogJsonFormVisible">
+      <div class="editor-container">
+        <json-editor ref="jsonEditor" v-model="jsonContent" />
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogJsonFormVisible = false">
+          {{ $t('table.cancel') }}
         </el-button>
       </div>
     </el-dialog>
@@ -201,19 +126,16 @@
         getEmailLogs
     } from '@/api/emailLog'
     import baseData from '@/config/baseData'
+    import JsonEditor from '@/components/JsonEditor'
 
     export default {
         name: 'EmailLog',
-        components: {Pagination},
+        components: {Pagination, JsonEditor},
         directives: {waves},
         filters: {
-            whetherFilter(type) {
-                var whetherFilterKeyValue = baseData.whetherOptions.reduce((acc, cur) => {
-                    acc[cur.key] = cur.value;
-                    return acc;
-                }, {});
-                return whetherFilterKeyValue[type];
-            }
+            descFilter(data) {
+                return baseData.descFilter(data);
+            },
         },
         data() {
             return {
@@ -225,6 +147,8 @@
                     pageSize: 20,
                     title: null
                 },
+                content: null,
+                jsonContent: null,
                 formData: {
                     id: '',
                     subject: null,
@@ -240,11 +164,9 @@
                     remark: null,
                 },
                 dialogFormVisible: false,
+                dialogJsonFormVisible: false,
                 dialogStatus: '',
-                formTitle: {
-                    edit: this.$t('Edit'),
-                    add: this.$t('Add')
-                },
+                formTitle: null,
                 whetherOptions: baseData.whetherOptions,
                 rules: {
                     attrName: [{required: true, message: '必填', trigger: 'change'}],
@@ -363,7 +285,24 @@
                     ids.push(datas[i].id);
                 }
                 this.handleDelete(ids);
+            },
+            handleView(data, title) {
+                this.dialogFormVisible = true;
+                this.content = data;
+                this.formTitle = title;
+            },
+            handleJsonView(data, title) {
+                this.dialogJsonFormVisible = true;
+                this.jsonContent = JSON.parse(data);
+                this.formTitle = title;
             }
         }
     }
 </script>
+
+<style scoped>
+  .editor-container{
+    position: relative;
+    height: 100%;
+  }
+</style>
