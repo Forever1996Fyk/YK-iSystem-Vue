@@ -8,6 +8,8 @@ export default {
     genCode: '代码生成',
     gateway: '路由网关',
     taskScheduler: '任务调度',
+    developManage: '开发管理',
+    swaggerDocument: 'swagger文档',
     actionLog: '操作日志',
     taskLog: '任务日志',
     emailManage: '邮件管理',

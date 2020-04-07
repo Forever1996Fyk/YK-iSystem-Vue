@@ -8,6 +8,7 @@ import Layout from '@/layout'
 import workflowRouter from '@/router/modules/workflow'
 import emailManageRouter from '@/router/modules/emailManage'
 import taskManageRouter from '@/router/modules/taskManage'
+import developManageRouter from '@/router/modules/developManage'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -139,33 +140,7 @@ export const asyncRoutes = [
       roles: ['admin']
     },
     children: [
-      {
-        path: 'genCode',
-        component: () => import('@/views/systemManage/genCode'),
-        name: 'genCode',
-        meta: {
-          title: 'genCode',
-          roles: ['admin']
-        }
-      },
-      {
-        path: 'gateway',
-        component: () => import('@/views/systemManage/gateway'),
-        name: 'gateway',
-        meta: {
-          title: 'gateway',
-          roles: ['admin']
-        }
-      },
-      {
-        path: 'actionLog',
-        component: () => import('@/views/systemManage/actionLog'),
-        name: 'actionLog',
-        meta: {
-          title: 'actionLog',
-          roles: ['admin']
-        }
-      },
+      developManageRouter,
       taskManageRouter,
       emailManageRouter
     ]
