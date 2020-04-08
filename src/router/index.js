@@ -9,6 +9,7 @@ import workflowRouter from '@/router/modules/workflow'
 import emailManageRouter from '@/router/modules/emailManage'
 import taskManageRouter from '@/router/modules/taskManage'
 import developManageRouter from '@/router/modules/developManage'
+import systemMonitorRouter from '@/router/modules/systemMonitor'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -142,7 +143,8 @@ export const asyncRoutes = [
     children: [
       developManageRouter,
       taskManageRouter,
-      emailManageRouter
+      emailManageRouter,
+      systemMonitorRouter
     ]
   },
   {

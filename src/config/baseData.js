@@ -64,6 +64,12 @@ module.exports = {
     {key: 2, value: 'velocity模板'},
     {key: 3, value: 'freemarker模板'},
   ],
+  contentType: [
+    {key: 'application/x-www-form-urlencoded', value: 'application/x-www-form-urlencoded'},
+    {key: 'multipart/form-data', value: 'multipart/form-data'},
+    {key: 'application/json', value: 'application/json'},
+    {key: 'text/xml', value: 'text/xml'},
+  ],
   filterKeyValue(obj) {
     var result = obj.reduce((acc, cur) => {
       acc[cur.key] = cur.value;

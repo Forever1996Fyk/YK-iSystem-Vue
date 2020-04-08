@@ -1,3 +1,5 @@
+import systemMonitorRouter from "@/router/modules/systemMonitor";
+
 export default {
   route: {
     dashboard: '首页',
@@ -37,7 +39,10 @@ export default {
     userLeave: '请假流程',
     upcomingTask: '待办任务',
     doneTask: '已办任务',
-    handleTask: '办理任务'
+    handleTask: '办理任务',
+    systemMonitor: '系统监控',
+    serverMonitor: '服务监控',
+    druidMonitor: '数据源监控',
   },
   navbar: {
     dashboard: '首页',
@@ -245,7 +250,9 @@ export default {
     template: '模板',
     tplParams: '模板参数',
     templateType: '模板类型',
-    config: '配置'
+    config: '配置',
+    jobAddress: '任务位置',
+    alarmMail: '警报邮箱'
   },
   example: {
     warning: '创建和编辑页面是不能被 keep-alive 缓存的，因为keep-alive 的 include 目前不支持根据路由来缓存，所以目前都是基于 component name 来进行缓存的。如果你想类似的实现缓存效果，可以使用 localStorage 等浏览器缓存方案。或者不要使用 keep-alive 的 include，直接缓存所有页面。详情见'

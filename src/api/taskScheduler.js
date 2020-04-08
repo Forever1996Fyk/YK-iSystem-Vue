@@ -56,6 +56,32 @@ export function editLocalJob(data) {
 }
 
 /**
+ * 添加远程定时任务
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function addHttpJob(data) {
+  return request({
+    url: '/system/api/taskScheduler/addHttpJob',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 修改远程定时任务
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function editHttpJob(data) {
+  return request({
+    url: '/system/api/taskScheduler/editHttpJob',
+    method: 'put',
+    data
+  })
+}
+
+/**
  * 删除任务
  * @param data
  * @returns {AxiosPromise}

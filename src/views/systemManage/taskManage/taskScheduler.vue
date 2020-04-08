@@ -108,7 +108,8 @@
           <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleUpdate(row)">
             {{ $t('table.edit') }}
           </el-button>
-          <el-button :type="row.status === 1?'info':'success'" size="mini" :icon="row.status === 1?'el-icon-video-pause':'el-icon-video-play'" @click="handleTask(row)">
+          <el-button :type="row.status === 1?'info':'success'" size="mini"
+                     :icon="row.status === 1?'el-icon-video-pause':'el-icon-video-play'" @click="handleTask(row)">
             {{ row.status === 1 ? $t('table.pause'): $t('table.resume') }}
           </el-button>
           <el-button size="mini" type="danger" icon="el-icon-delete" @click="handleDelete(row)">
@@ -130,12 +131,14 @@
       <!-- rules表示表单验证规则 -->
       <el-form ref="dataForm" :rules="rules" :model="formData" label-width="100px">
         <el-row>
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item :label="$t('table.jobName')" prop="jobName">
               <el-input v-model="formData.jobName"/>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+        </el-row>
+        <el-row>
+          <el-col :span="8">
             <el-form-item :label="$t('table.jobGroupName')" prop="jobGroupName">
               <el-select v-model="formData.jobGroupName" class="filter-item" placeholder="Please select"
                          style="width:100%">
@@ -144,7 +147,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
             <el-form-item :label="$t('table.jobTrigger')" prop="jobTrigger">
               <el-select v-model="formData.jobTrigger" class="filter-item" placeholder="Please select"
                          style="width:100%" @change="changeJobTrigger" :disabled="disabled">
@@ -153,9 +156,18 @@
               </el-select>
             </el-form-item>
           </el-col>
+          <el-col :span="8">
+            <el-form-item :label="$t('table.jobAddress')" prop="jobAddress">
+              <el-select v-model="jobAddress" class="filter-item" placeholder="Please select"
+                         style="width:100%">
+                <el-option key="local" label="本地" value="local"/>
+                <el-option key="http" label="远程" value="http"/>
+              </el-select>
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-row>
-          <el-col :span="24">
+          <el-col :span="24" v-if="jobAddress === 'local'">
             <el-form-item :label="$t('table.jobClassName')" prop="jobClassName">
               <el-input v-model="formData.jobClassName"/>
               <el-alert
@@ -168,6 +180,44 @@
                   参数说明：支持字符串，布尔类型，长整型，浮点型，整型"
                 </template>
               </el-alert>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row v-if="jobAddress === 'http'">
+          <el-col :span="12">
+            <el-form-item :label="$t('table.serviceId')" prop="serviceId">
+              <el-select v-model="httpData.serviceId" class="filter-item"
+                         placeholder="Please select" style="width:100%">
+                <el-option v-for="item in serviceIdOptions" :key="item.key" :label="item.value" :value="item.key"/>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item :label="$t('table.contentType')" prop="contentType">
+              <el-select v-model="httpData.contentType" class="filter-item"
+                         placeholder="Please select" style="width:100%">
+                <el-option v-for="item in contentTypeOptions" :key="item.key" :label="item.value" :value="item.key"/>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row v-if="jobAddress === 'http'">
+          <el-col :span="6">
+            <el-form-item :label="$t('table.requestMethod')" prop="method">
+              <el-select v-model="httpData.method" class="filter-item"
+                         placeholder="Please select" style="width:100%">
+                <el-option v-for="item in requestMethod" :key="item.key" :label="item.value" :value="item.key"/>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="9">
+            <el-form-item :label="$t('table.path')" prop="path">
+              <el-input v-model="httpData.path"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="9">
+            <el-form-item :label="$t('table.alarmMail')" prop="alarmMail">
+              <el-input v-model="httpData.alarmMail"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -263,8 +313,13 @@
         editLocalJob,
         deleteJob,
         pauseJob,
-        resumeJob
+        resumeJob,
+        addHttpJob,
+        editHttpJob
     } from '@/api/taskScheduler'
+    import {
+        getGatewayRoutesNoPage
+    } from '@/api/gatewayRoute'
     import baseData from '@/config/baseData'
     import {formatDate} from '@/utils'
     import {cron} from 'vue-cron';
@@ -336,6 +391,15 @@
                     endTime: '',
                     misfirePolicy: '',
                     concurrent: '',
+                    dataMap: '',
+                },
+                httpData: {
+                    serviceId: '',
+                    method: '',
+                    path: '',
+                    contentType: '',
+                    body: '',
+                    alarmMail: ''
                 },
                 cronVisible: false,
                 simpleVisible: true,
@@ -347,7 +411,11 @@
                     edit: this.$t('Edit'),
                     add: this.$t('Add')
                 },
+                jobAddress: '',
                 whetherOptions: baseData.whetherOptions,
+                requestMethod: baseData.requestMethod,
+                contentTypeOptions: baseData.contentType,
+                serviceIdOptions: [],
                 rules: {
                     jobName: [{required: true, message: '任务名称必填', trigger: 'change'}],
                     jobClassName: [{required: true, message: '任务类名必填', trigger: 'change'}],
@@ -361,11 +429,18 @@
                     endTime: [{required: true, message: '结束时间必填', trigger: 'change'}],
                     misfirePolicy: [{required: true, message: '执行策略必填', trigger: 'change'}],
                     concurrent: [{required: true, message: '并发执行必填', trigger: 'change'}],
+                    // jobAddress: [{required: true, message: '任务位置必填', trigger: 'change'}],
+                    // serviceId: [{required: true, message: '服务id必填', trigger: 'change'}],
+                    // method: [{required: true, message: '请求方式必填', trigger: 'change'}],
+                    // path: [{required: true, message: '请求路径必填', trigger: 'change'}],
+                    // contentType: [{required: true, message: '响应类型必填', trigger: 'change'}],
+                    // alarmMail: [{required: true, message: '警报邮箱必填', trigger: 'change'}],
                 }
             }
         },
         created() {
-            this.getList()
+            this.getList();
+            this.getServiceIds();
         },
         methods: {
             changeJobTrigger() {
@@ -409,8 +484,8 @@
                     endTime: null
                 }
             },
-            changeCron(val){
-                this.formData.cronExpression=val;
+            changeCron(val) {
+                this.formData.cronExpression = val;
             },
             handleCreate() {
                 this.resetTemp()
@@ -433,6 +508,13 @@
                 })
             },
             addSave() {
+                if (this.jobAddress === 'local') {
+                    this.addLocalSave();
+                } else if (this.jobAddress === 'http') {
+                    this.addHttpSave();
+                }
+            },
+            addLocalSave() {
                 this.$refs['dataForm'].validate((valid) => {
                     if (valid) {
                         console.log(this.formData)
@@ -450,7 +532,34 @@
                     }
                 })
             },
+            addHttpSave() {
+                this.$refs['dataForm'].validate((valid) => {
+                    if (valid) {
+                        console.log(this.formData)
+                        if (this.formData.startTime) {
+                            this.formData.startTime = formatDate(this.formData.startTime, "yyyy-MM-dd hh:mm:ss");
+                        }
+                        if (this.formData.endTime) {
+                            this.formData.endTime = formatDate(this.formData.endTime, "yyyy-MM-dd hh:mm:ss");
+                        }
+                        this.formData.dataMap = this.httpData;
+                        console.log(this.formData);
+                        addHttpJob(this.formData).then((res) => {
+                            this.$message.success(res.message)
+                            this.getList()
+                            this.dialogFormVisible = false
+                        })
+                    }
+                })
+            },
             editSave() {
+                if (this.jobAddress === 'local') {
+                    this.editLocalSave();
+                } else if (this.jobAddress === 'http') {
+                    this.editHttpSave();
+                }
+            },
+            editLocalSave() {
                 this.$refs['dataForm'].validate((valid) => {
                     if (valid) {
                         console.log(this.formData)
@@ -461,6 +570,26 @@
                             this.formData.endTime = formatDate(this.formData.endTime, "yyyy-MM-dd hh:mm:ss");
                         }
                         editLocalJob(this.formData).then((res) => {
+                            console.log(res)
+                            this.$message.success(res.message)
+                            this.getList()
+                            this.dialogFormVisible = false
+                        })
+                    }
+                })
+            },
+            editHttpSave() {
+                this.$refs['dataForm'].validate((valid) => {
+                    if (valid) {
+                        console.log(this.formData)
+                        if (this.formData.startTime) {
+                            this.formData.startTime = formatDate(this.formData.startTime, "yyyy-MM-dd hh:mm:ss");
+                        }
+                        if (this.formData.endTime) {
+                            this.formData.endTime = formatDate(this.formData.endTime, "yyyy-MM-dd hh:mm:ss");
+                        }
+                        this.formData.dataMap = this.httpData;
+                        editHttpJob(this.formData).then((res) => {
                             console.log(res)
                             this.$message.success(res.message)
                             this.getList()
@@ -534,6 +663,18 @@
                     ids.push(datas[i].id)
                 }
                 this.handleDelete(ids)
+            },
+            getServiceIds() {
+                this.serviceIdOptions = [];
+                getGatewayRoutesNoPage().then((res) => {
+                    var data = res.data;
+                    if (data) {
+                        for (var i = 0; i < data.length; i++) {
+                            var obj = {key: data[i].routeName, value: data[i].routeName};
+                            this.serviceIdOptions.push(obj);
+                        }
+                    }
+                })
             }
         }
     }
