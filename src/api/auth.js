@@ -28,3 +28,18 @@ export function logout() {
     method: 'post'
   })
 }
+
+export function emailRegistered(data) {
+  return request({
+    url: '/auth/api/registered/emailRegistered',
+    method: 'post',
+    data
+  })
+}
+
+export function sendRegisterEmail(email, userName) {
+  return request({
+    url: '/auth/api/registered/sendRegisterEmail?email=' + email + '&userName=' + userName,
+    method: 'post',
+  })
+}
