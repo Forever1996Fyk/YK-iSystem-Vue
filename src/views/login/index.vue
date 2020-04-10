@@ -222,6 +222,7 @@ $light_gray:#eee;
   .register {
     font-size: 14px;
     margin-bottom: 10px;
+    color: #2aabd2;
   }
 
   .svg-container {

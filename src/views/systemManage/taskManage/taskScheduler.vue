@@ -21,7 +21,7 @@
         {{ $t('table.add') }}
       </el-button>
 
-      <router-link :to="'/systemManage/taskLog/'">
+      <router-link :to="'/systemManage/taskManage/taskLog/'">
         <el-button
           class="filter-item"
           style="margin-left: 10px;"

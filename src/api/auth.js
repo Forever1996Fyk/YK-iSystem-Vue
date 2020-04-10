@@ -31,7 +31,7 @@ export function logout() {
 
 export function emailRegistered(data) {
   return request({
-    url: '/auth/api/registered/emailRegistered',
+    url: '/api/registered/emailRegistered',
     method: 'post',
     data
   })
@@ -39,7 +39,7 @@ export function emailRegistered(data) {
 
 export function sendRegisterEmail(email, userName) {
   return request({
-    url: '/auth/api/registered/sendRegisterEmail?email=' + email + '&userName=' + userName,
+    url: '/api/registered/sendRegisterEmail?email=' + email + '&userName=' + userName,
     method: 'post',
   })
 }
