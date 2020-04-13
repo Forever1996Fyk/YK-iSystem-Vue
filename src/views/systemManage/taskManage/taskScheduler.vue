@@ -201,7 +201,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row v-if="jobAddress === 'http'">
+        <el-row v-if="formData.taskProp === 'http_task'">
           <el-col :span="6">
             <el-form-item :label="$t('table.requestMethod')" prop="method">
               <el-select v-model="httpData.method" class="filter-item"
@@ -555,9 +555,9 @@
             },
             editSave() {
                 console.log(this.formData.taskProp);
-                if (this.jobAddress === 'local_task') {
+                if (this.formData.taskProp === 'local_task') {
                     this.editLocalSave();
-                } else if (this.jobAddress === 'http_task') {
+                } else if (this.formData.taskProp === 'http_task') {
                     this.editHttpSave();
                 }
             },
