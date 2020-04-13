@@ -22,9 +22,9 @@ export function getSystemUserList() {
   })
 }
 
-export function logout() {
+export function logout(token) {
   return request({
-    url: '/vue-element-admin/user/logout',
+    url: '/auth/api/logout/token?token=' + token,
     method: 'post'
   })
 }

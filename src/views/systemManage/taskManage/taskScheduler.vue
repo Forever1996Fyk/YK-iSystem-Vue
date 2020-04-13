@@ -158,16 +158,16 @@
           </el-col>
           <el-col :span="8">
             <el-form-item :label="$t('table.jobAddress')" prop="jobAddress">
-              <el-select v-model="jobAddress" class="filter-item" placeholder="Please select"
+              <el-select v-model="formData.taskProp" class="filter-item" placeholder="Please select"
                          style="width:100%">
-                <el-option key="local" label="本地" value="local"/>
-                <el-option key="http" label="远程" value="http"/>
+                <el-option key="local_task" label="本地" value="local_task"/>
+                <el-option key="http_task" label="远程" value="http_task"/>
               </el-select>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="24" v-if="jobAddress === 'local'">
+          <el-col :span="24" v-if="formData.taskProp === 'local_task'">
             <el-form-item :label="$t('table.jobClassName')" prop="jobClassName">
               <el-input v-model="formData.jobClassName"/>
               <el-alert
@@ -183,7 +183,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row v-if="jobAddress === 'http'">
+        <el-row v-if="formData.taskProp === 'http_task'">
           <el-col :span="12">
             <el-form-item :label="$t('table.serviceId')" prop="serviceId">
               <el-select v-model="httpData.serviceId" class="filter-item"
@@ -392,6 +392,7 @@
                     misfirePolicy: '',
                     concurrent: '',
                     dataMap: '',
+                    taskProp: ''
                 },
                 httpData: {
                     serviceId: '',
@@ -411,7 +412,6 @@
                     edit: this.$t('Edit'),
                     add: this.$t('Add')
                 },
-                jobAddress: '',
                 whetherOptions: baseData.whetherOptions,
                 requestMethod: baseData.requestMethod,
                 contentTypeOptions: baseData.contentType,
@@ -481,7 +481,8 @@
                     repeatInterval: '',
                     repeatCount: '',
                     startTime: null,
-                    endTime: null
+                    endTime: null,
+                    taskProp: ''
                 }
             },
             changeCron(val) {
@@ -508,9 +509,9 @@
                 })
             },
             addSave() {
-                if (this.jobAddress === 'local') {
+                if (this.formData.taskProp === 'local_task') {
                     this.addLocalSave();
-                } else if (this.jobAddress === 'http') {
+                } else if (this.formData.taskProp === 'http_task') {
                     this.addHttpSave();
                 }
             },
@@ -553,9 +554,10 @@
                 })
             },
             editSave() {
-                if (this.jobAddress === 'local') {
+                console.log(this.formData.taskProp);
+                if (this.jobAddress === 'local_task') {
                     this.editLocalSave();
-                } else if (this.jobAddress === 'http') {
+                } else if (this.jobAddress === 'http_task') {
                     this.editHttpSave();
                 }
             },

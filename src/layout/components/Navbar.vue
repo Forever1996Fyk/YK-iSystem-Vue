@@ -85,8 +85,16 @@ export default {
       this.$store.dispatch('app/toggleSideBar')
     },
     async logout() {
-      await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+        this.$confirm('确定退出吗?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+        }).then(async () => {
+            await this.$store.dispatch('user/logout')
+            this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+        }).catch(() => {
+            this.$message.info("已取消");
+        })
     }
   }
 }
