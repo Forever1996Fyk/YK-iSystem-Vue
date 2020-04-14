@@ -62,7 +62,7 @@ export default {
         },
         xAxis: [{
           type: 'category',
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: ['Java', 'Python', 'PHP', 'C', 'C++', 'C#', 'JS'],
           axisTick: {
             alignWithLabel: true
           }
@@ -74,25 +74,25 @@ export default {
           }
         }],
         series: [{
-          name: 'pageA',
+          name: '1月使用率',
           type: 'bar',
           stack: 'vistors',
-          barWidth: '60%',
-          data: [79, 52, 200, 334, 390, 330, 220],
+          barWidth: '30%',
+          data: [16.896, 9.704, 2.405, 15.774, 5.574, 5.349, 2.451],
           animationDuration
         }, {
-          name: 'pageB',
+          name: '2月使用率',
           type: 'bar',
           stack: 'vistors',
-          barWidth: '60%',
-          data: [80, 52, 200, 334, 390, 330, 220],
+          barWidth: '30%',
+          data: [20.896, 14.543, 4.411, 13.334, 7.612, 5.349, 1.421],
           animationDuration
         }, {
-          name: 'pageC',
+          name: '3月使用率',
           type: 'bar',
           stack: 'vistors',
-          barWidth: '60%',
-          data: [30, 52, 200, 334, 390, 330, 220],
+          barWidth: '30%',
+          data: [26.896, 12.461, 5.123, 10.012, 9.601, 5.349, 5.451],
           animationDuration
         }]
       })
