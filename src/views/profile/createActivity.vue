@@ -1,6 +1,16 @@
 <template>
   <div class="createPost-container">
-    <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
+    <el-form ref="postForm" :model="postForm" class="form-container">
+      <sticky :z-index="10" :class-name="'sub-navbar'">
+        <el-button style="margin-left: 10px;" type="success">
+          保存
+        </el-button>
+        <router-link :to="'/profile/index'">
+          <el-button type="warning">
+            取消
+          </el-button>
+        </router-link>
+      </sticky>
       <div class="createPost-main-container">
 
         <el-form-item prop="content" style="margin-bottom: 30px;">
@@ -36,10 +46,11 @@
     import Tinymce from '@/components/Tinymce'
     import Upload from '@/components/Upload/SingleImage3'
     import MDinput from '@/components/MDinput'
-    import {validURL} from '@/utils/validate'
-    import {addArticle, editArticle, getArticleById} from '@/api/article'
-    import {formatDate} from '@/utils'
     import editorImage from '@/components/Tinymce/components/EditorImage'
+    import Sticky from '@/components/Sticky' // 粘性header组件
+    import { getToken } from '@/utils/auth'
+    import bucket from '@/config/bucket'
+    import config from '@/config'
 
     const defaultForm = {
         status: 2,
@@ -57,153 +68,62 @@
     }
 
     export default {
-        name: 'ArticleDetail',
-        components: {Tinymce, MDinput, Upload, editorImage},
-        props: {
-            isEdit: {
-                type: Boolean,
-                default: false
-            }
-        },
+        name: 'CreateActivity',
+        components: {Tinymce, MDinput, Upload, editorImage, Sticky},
         data() {
-            const validateRequire = (rule, value, callback) => {
-                if (value === '') {
-                    this.$message({
-                        message: rule.field + '为必传项',
-                        type: 'error'
-                    })
-                    callback(new Error(rule.field + '为必传项'))
-                } else {
-                    callback()
-                }
-            }
-            const validateSourceUri = (rule, value, callback) => {
-                if (value) {
-                    if (validURL(value)) {
-                        callback()
-                    } else {
-                        this.$message({
-                            message: '外链url填写不正确',
-                            type: 'error'
-                        })
-                        callback(new Error('外链url填写不正确'))
-                    }
-                } else {
-                    callback()
-                }
-            }
             return {
-                postForm: Object.assign({}, defaultForm),
-                loading: false,
-                userListOptions: [],
-                rules: {
-                    title: [{validator: validateRequire}],
-                    content: [{validator: validateRequire}],
-                    source_uri: [{validator: validateSourceUri, trigger: 'blur'}]
+                listObj: {},
+                fileList: [],
+                headers: {
+                    Authorization: 'Bearer ' + getToken()
                 },
-                tempRoute: {}
+                file: '',
+                url: config.apiUrl.dev + '/fileupload/api/oss/uploadOSS',
+                param: bucket.bucketPubR,
+                postForm: defaultForm
             }
-        },
-        computed: {
-            contentShortLength() {
-                return this.postForm.articleSummary.length
-            },
-            lang() {
-                return this.$store.getters.language
-            }
-        },
-        created() {
-            if (this.isEdit) {
-                const id = this.$route.params && this.$route.params.id
-                this.getArticleById(id);
-            }
-
-            // Why need to make a copy of this.$route here?
-            // Because if you enter this page and quickly switch tag, may be in the execution of the setTagsViewTitle function, this.$route is no longer pointing to the current page
-            // https://github.com/PanJiaChen/vue-element-admin/issues/1221
-            this.tempRoute = Object.assign({}, this.$route)
         },
         methods: {
-            getArticleById(id) {
-                getArticleById(id).then(response => {
-                    this.postForm = response.data;
-                    this.postForm.comment = this.postForm.comment === 1;
-
-                    // just for test
-                    // this.postForm.title += `   Article Id:${this.postForm.id}`
-                    // this.postForm.articleSummary += `   Article Id:${this.postForm.id}`
-
-                    // set tagsview title
-                    this.setTagsViewTitle()
-
-                    // set page title
-                    this.setPageTitle()
-                }).catch(err => {
-                    console.log(err)
-                })
-            },
-            setTagsViewTitle() {
-                const title = this.lang === 'zh' ? '编辑文章' : 'Edit Article'
-                const route = Object.assign({}, this.tempRoute, {title: `${title}-${this.postForm.id}`})
-                this.$store.dispatch('tagsView/updateVisitedView', route)
-            },
-            setPageTitle() {
-                const title = 'Edit Article'
-                document.title = `${title} - ${this.postForm.id}`
-            },
-            submitForm() {
-                console.log(this.postForm);
-                this.saveArticle(1);
-            },
-            saveArticle(status) {
-                this.$refs.postForm.validate(valid => {
-                    if (valid) {
-                        this.loading = true;
-                        this.postForm.status = status;
-                        if (this.postForm.comment) {
-                            this.postForm.comment = 1;
-                        } else {
-                            this.postForm.comment = 0;
-                        }
-                        this.postForm.publishTime = formatDate(this.postForm.publishTime, "yyyy-MM-dd hh:mm:ss");
-
-                        if (!this.postForm.id) {
-                            addArticle(this.postForm).then((res) => {
-                                this.checkStatus(status, res);
-                                this.postForm = Object.assign({}, defaultForm)
-                            });
-                        } else {
-                            editArticle(this.postForm).then((res) => {
-                                this.checkStatus(status, res);
-                            });
-                        }
-
-                    } else {
-                        console.log('error submit!!')
-                        return false
+            handleSuccess(response, file) {
+                const uid = file.uid
+                const objKeyArr = Object.keys(this.listObj)
+                for (let i = 0, len = objKeyArr.length; i < len; i++) {
+                    if (this.listObj[objKeyArr[i]].uid === uid) {
+                        this.listObj[objKeyArr[i]].url = response.data.attachUrl
+                        this.listObj[objKeyArr[i]].hasSuccess = true
+                        return
                     }
-                })
-            },
-            checkStatus(status, res) {
-                if (status === 1) {
-                    this.$notify({
-                        title: '成功',
-                        message: res.message,
-                        type: 'success',
-                        duration: 2000
-                    });
-                } else {
-                    this.$message({
-                        message: '保存草稿成功',
-                        type: 'success',
-                        showClose: true,
-                        duration: 1000
-                    })
                 }
-                this.loading = false;
             },
-            draftForm() {
-                this.saveArticle(2);
+            handleRemove(file) {
+                const uid = file.uid
+                const objKeyArr = Object.keys(this.listObj)
+                for (let i = 0, len = objKeyArr.length; i < len; i++) {
+                    if (this.listObj[objKeyArr[i]].uid === uid) {
+                        delete this.listObj[objKeyArr[i]]
+                        return
+                    }
+                }
+            },
+            beforeUpload(file) {
+                const _self = this
+                const _URL = window.URL || window.webkitURL
+                const fileName = file.uid
+                this.listObj[fileName] = {}
+                return new Promise((resolve, reject) => {
+                    const img = new Image()
+                    img.src = _URL.createObjectURL(file)
+                    img.onload = function () {
+                        _self.listObj[fileName] = {
+                            hasSuccess: false,
+                            uid: file.uid,
+                            width: this.width,
+                            height: this.height
+                        }
+                    }
+
+                    resolve(true)
+                })
             }
         }
     }
@@ -246,6 +166,7 @@
       border-bottom: 1px solid #bfcbd9;
     }
   }
+
   .editor-slide-upload {
     margin-bottom: 20px;
 
