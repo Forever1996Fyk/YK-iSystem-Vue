@@ -124,6 +124,13 @@ export const constantRoutes = [
         component: () => import('@/views/profile/index'),
         name: 'Profile',
         meta: { title: 'profile', icon: 'user', noCache: true }
+      },
+      {
+        path: '/profile/createActivity',
+        component: () => import('@/views/profile/createActivity'),
+        name: 'CreateActivity',
+        meta: { title: 'createActivity' },
+        hidden: true
       }
     ]
   }

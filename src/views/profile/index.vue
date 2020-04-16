@@ -9,6 +9,9 @@
 
         <el-col :span="18" :xs="24">
           <el-card>
+            <router-link :to="'/profile/createActivity'">
+              <el-button ><i class="el-icon-plus"></i>添加动态</el-button>
+            </router-link>
             <el-tabs v-model="activeTab">
               <el-tab-pane label="Activity" name="activity">
                 <activity />
@@ -20,8 +23,13 @@
                 <account :user="user" />
               </el-tab-pane>
             </el-tabs>
+
           </el-card>
         </el-col>
+
+<!--        <el-col :span="6" :xs="24">-->
+<!--          <user-card :user="user" />-->
+<!--        </el-col>-->
 
       </el-row>
     </div>

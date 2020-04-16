@@ -41,3 +41,16 @@ export function getIndexInfoData(data) {
     params: data
   })
 }
+
+/**
+ * 获取首页数据(新闻热搜)
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function getHotNews(data) {
+  return request({
+    url: '/base/api/index/getHotNews',
+    method: 'get',
+    params: data
+  })
+}

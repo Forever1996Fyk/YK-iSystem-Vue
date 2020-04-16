@@ -16,7 +16,7 @@
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
-          <raddar-chart/>
+          <keyboard-chart/>
         </div>
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
@@ -29,7 +29,7 @@
     <el-row :gutter="8">
       <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 12}" :xl="{span: 12}"
               style="padding-right:8px;margin-bottom:30px;">
-        <transaction-table/>
+        <hot-news/>
       </el-col>
       <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}"
               style="margin-bottom:30px;">
@@ -48,9 +48,10 @@
     import PanelGroup from './components/PanelGroup'
     import LineChart from './components/LineChart'
     import RaddarChart from './components/RaddarChart'
+    import KeyboardChart from './components/Keyboard'
     import PieChart from './components/PieChart'
     import BarChart from './components/BarChart'
-    import TransactionTable from './components/TransactionTable'
+    import HotNews from './components/HotNews'
     import TodoList from './components/TodoList'
     import BoxCard from './components/BoxCard'
 
@@ -84,9 +85,10 @@
             RaddarChart,
             PieChart,
             BarChart,
-            TransactionTable,
+            HotNews,
             TodoList,
-            BoxCard
+            BoxCard,
+            KeyboardChart
         },
         data() {
             return {
@@ -101,16 +103,14 @@
         },
         methods: {
             handleSetLineChartData(type) {
-                var lineData = {xData: [], yData: []};
+                var data = {type: type, chartData: null};
                 switch (type) {
                     case 'actionCount':
                         getIndexCountData({type: type}).then((res) => {
-                            for (var i = 0; i < res.data.list.length; i++) {
-                                lineData.xData.push(res.data.list[i].actionTime);
-                                lineData.yData.push(res.data.list[i].num);
-                            }
                             this.countNum = res.data;
-                            this.lineChartData = lineData;
+
+                            data.chartData = res.data;
+                            this.lineChartData = data;
                         })
                 }
             },

@@ -63,9 +63,68 @@
                 this.setOptions(this.chartData)
             },
             setOptions(val) {
+                if (val.type === 'actionCount') {
+                    this.setActionCountOption(val.chartData);
+                }
+                // this.chart.setOption({
+                //     xAxis: {
+                //         data: val.xData,
+                //         boundaryGap: false,
+                //         axisTick: {
+                //             show: false
+                //         }
+                //     },
+                //     grid: {
+                //         left: 10,
+                //         right: 40,
+                //         bottom: 20,
+                //         top: 30,
+                //         containLabel: true
+                //     },
+                //     tooltip: {
+                //         trigger: 'axis',
+                //         axisPointer: {
+                //             type: 'cross'
+                //         },
+                //         padding: [5, 10]
+                //     },
+                //     yAxis: {
+                //         axisTick: {
+                //             show: false
+                //         }
+                //     },
+                //     legend: {
+                //         data: ['actionCountNum', 'actual']
+                //     },
+                //     series: [{
+                //         name: 'actionCountNum', itemStyle: {
+                //             normal: {
+                //                 color: '#FF005A',
+                //                 lineStyle: {
+                //                     color: '#FF005A',
+                //                     width: 2
+                //                 }
+                //             }
+                //         },
+                //         smooth: true,
+                //         type: 'line',
+                //         data: val.yData,
+                //         animationDuration: 2800,
+                //         animationEasing: 'cubicInOut',
+                //         areaStyle: {}
+                //     }]
+                // })
+            },
+            setActionCountOption(data) {
+                var xData = [];
+                var yData = [];
+                for (var i = 0; i < data.list.length; i++) {
+                    xData.push(data.list[i].actionTime);
+                    yData.push(data.list[i].num);
+                }
                 this.chart.setOption({
                     xAxis: {
-                        data: val.xData,
+                        data: xData,
                         boundaryGap: false,
                         axisTick: {
                             show: false
@@ -73,7 +132,7 @@
                     },
                     grid: {
                         left: 10,
-                        right: 10,
+                        right: 40,
                         bottom: 20,
                         top: 30,
                         containLabel: true
@@ -105,9 +164,10 @@
                         },
                         smooth: true,
                         type: 'line',
-                        data: val.yData,
+                        data: yData,
                         animationDuration: 2800,
-                        animationEasing: 'cubicInOut'
+                        animationEasing: 'cubicInOut',
+                        areaStyle: {}
                     }]
                 })
             }
