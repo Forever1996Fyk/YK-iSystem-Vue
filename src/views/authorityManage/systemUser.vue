@@ -312,26 +312,6 @@
         name: 'SystemUser',
         components: {Pagination},
         directives: {waves},
-        filters: {
-            marryFlagFilter(type) {
-                return baseData.filterKeyValue(baseData.marryFlag)[type];
-            },
-            sexFilter(type) {
-                return baseData.filterKeyValue(baseData.sex)[type];
-            },
-            educationFilter(type) {
-                return baseData.filterKeyValue(baseData.education)[type];
-            },
-            provFilter(type) {
-                return baseData.filterKeyValue(that.prov)[type];
-            },
-            cityFilter(type) {
-                return baseData.filterKeyValue(that.city1)[type];
-            },
-            distFilter(type) {
-                return baseData.filterKeyValue(that.dist1)[type];
-            }
-        },
         beforeCreate() {
             that = this;
         },

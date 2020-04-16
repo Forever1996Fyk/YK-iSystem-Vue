@@ -28,8 +28,8 @@
             <span>Education</span></div>
           <div class="user-bio-section-body">
             <div class="text-muted">
-              JS in Computer Science from the University of Technology <a class="editEdu" @click.prevent="dialogFormVisible = true">修改</a>
-              <label />
+              {{formData.oneWord}} <a class="editEdu" @click.prevent="dialogFormVisible = true">修改</a>
+              <label/>
             </div>
           </div>
         </div>
@@ -38,25 +38,14 @@
           <div class="user-bio-section-header">
             <svg-icon icon-class="skill"/>
             <span>Skills</span>
-            <span><el-button @click="test" size="mini" ><i class="el-icon-plus"></i></el-button></span>
+            <span><el-button @click="dialogSkillsFormVisible = true" size="mini"><i
+              class="el-icon-plus"></i></el-button></span>
           </div>
           <div class="user-bio-section-body">
-            <div class="progress-item">
-              <span>Vue</span>
-              <el-slider :value="70" show-input @change="test"></el-slider>
-<!--              <el-progress :percentage="70"/>-->
-            </div>
-            <div class="progress-item">
-              <span>JavaScript</span>
-              <el-slider :value="18" show-input @change="test"></el-slider>
-            </div>
-            <div class="progress-item">
-              <span>Css</span>
-              <el-slider :value="12" show-input @change="test"></el-slider>
-            </div>
-            <div class="progress-item">
-              <span>ESLint</span>
-              <el-slider :value="100" show-input @change="test"></el-slider>
+            <div class="progress-item" v-for="(item, index) in formData.skillsList">
+              <span>{{formData.skillsList[index].skillsName}}</span>
+              <el-slider v-model="formData.skillsList[index].skillsSlider" show-input :show-input-controls="false"
+                         @change="changeSkillsSlider(item)"></el-slider>
             </div>
           </div>
         </div>
@@ -74,9 +63,10 @@
                  :headers="headers"
                  img-format="jpg"></my-upload>
 
-      <el-dialog :visible.sync="dialogFormVisible">
+      <el-dialog :visible.sync="dialogFormVisible" title="一句简介">
         <el-input
           :autosize="{ minRows: 4, maxRows: 8}"
+          v-model="formData.oneWord"
           type="textarea"
           placeholder="Please input"
         />
@@ -84,7 +74,33 @@
           <el-button @click="dialogFormVisible = false">
             {{ $t('table.cancel') }}
           </el-button>
-          <el-button type="primary" @click="dialogStatus==='add'?addSave():editSave()">
+          <el-button type="primary" @click="save('oneWord')">
+            {{ $t('table.confirm') }}
+          </el-button>
+        </div>
+      </el-dialog>
+
+      <el-dialog :visible.sync="dialogSkillsFormVisible" title="添加技能">
+        <el-form label-width="100px">
+          <el-row>
+            <el-col :span="12">
+              <el-form-item :label="$t('table.skillsName')" prop="skillsName">
+                <el-input v-model="skillsName"/>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="12">
+              <el-form-item :label="$t('table.skillsSlider')" prop="skillsSlider">
+                <el-slider show-input v-model="skillsSlider"></el-slider>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogSkillsFormVisible = false">
+            {{ $t('table.cancel') }}
+          </el-button>
+          <el-button type="primary" @click="save('addSkills')">
             {{ $t('table.confirm') }}
           </el-button>
         </div>
@@ -97,9 +113,10 @@
 <script>
     import PanThumb from '@/components/PanThumb'
     import myUpload from 'vue-image-crop-upload'
-    import { getToken } from '@/utils/auth'
+    import {getToken} from '@/utils/auth'
     import bucket from '@/config/bucket'
     import {mapMutations} from 'vuex'
+    import {addUserIntroduce, getUserIntroducesNoPage} from '@/api/userIntroduce'
 
     export default {
         components: {PanThumb, myUpload},
@@ -113,7 +130,14 @@
                 imgDataUrl: '',
                 url: 'http://127.0.0.1:8769/fileupload/api/admin/updateUserIcon',
                 editing: false,
-                dialogFormVisible: false
+                dialogFormVisible: false,
+                dialogSkillsFormVisible: false,
+                formData: {
+                    oneWord: null,
+                    skillsList: []
+                },
+                skillsName: null,
+                skillsSlider: 0,
             };
         },
         props: {
@@ -124,10 +148,14 @@
                         name: '',
                         email: '',
                         avatar: '',
-                        roles: ''
+                        roles: '',
+                        userId: ''
                     }
                 }
             }
+        },
+        created() {
+            this.getUserIntroduceData();
         },
         methods: {
             ...mapMutations({
@@ -137,8 +165,46 @@
                 this.show = !this.show;
             },
 
-            test() {
-                alert(11);
+            save(type) {
+                if (type === 'addSkills') {
+                    var skills = {skillsName: null, skillsSlider: null};
+                    skills.skillsName = this.skillsName;
+                    skills.skillsSlider = this.skillsSlider;
+
+                    if (this.skillsSlider === 0) {
+                        this.$message.warning('技能程度不能为0');
+                        return;
+                    }
+
+                    this.formData.skillsList.push(skills);
+                }
+
+                console.log(this.formData);
+                addUserIntroduce(this.formData).then((res) => {
+                    this.$message.success('保存成功');
+                    this.dialogFormVisible = false;
+                    this.dialogSkillsFormVisible = false;
+                });
+            },
+            changeSkillsSlider(item) {
+                console.log(item);
+                if (item.skillsSlider === 0) {
+                    this.formData.skillsList.pop(item);
+                }
+                this.save();
+            },
+
+            getUserIntroduceData() {
+                getUserIntroducesNoPage().then((res) => {
+                    if (res.data.length > 0) {
+                        this.formData = res.data[0];
+                        if (!res.data[0].skills) {
+                            this.formData.skillsList = [];
+                        } else {
+                            this.formData.skillsList = res.data[0].skillsList;
+                        }
+                    }
+                })
             },
             /**y
              * crop success
@@ -146,7 +212,7 @@
              * [param] imgDataUrl
              * [param] field
              */
-            cropSuccess(imgDataUrl, field){
+            cropSuccess(imgDataUrl, field) {
                 console.log('-------- crop success --------');
                 this.imgDataUrl = imgDataUrl;
             },
@@ -156,7 +222,7 @@
              * [param] jsonData   服务器返回数据，已进行json转码
              * [param] field
              */
-            cropUploadSuccess(jsonData, field){
+            cropUploadSuccess(jsonData, field) {
                 console.log('-------- upload success --------');
                 console.log(jsonData);
                 console.log(jsonData.data.attachUrl);
@@ -171,7 +237,7 @@
              * [param] status    server api return error status, like 500
              * [param] field
              */
-            cropUploadFail(status, field){
+            cropUploadFail(status, field) {
                 console.log('-------- upload fail --------');
                 console.log(status);
                 console.log('field: ' + field);

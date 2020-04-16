@@ -23,9 +23,8 @@ export function addSystemUser(data) {
  */
 export function getSystemUserById(id) {
   return request({
-    url: '/admin/api/systemUser/getSystemUserById',
+    url: '/admin/api/systemUser/getSystemUserById?id=' + id,
     method: 'get',
-    params: { id }
   })
 }
 

@@ -22,8 +22,8 @@
         </li>
         <li>
           <span class="link-black text-sm">
-            <svg-icon icon-class="like" />
-            Like
+            <i class="el-icon-delete"></i>
+            Delete
           </span>
         </li>
       </ul>

@@ -4,32 +4,32 @@
       <el-row :gutter="20">
 
         <el-col :span="6" :xs="24">
-          <user-card :user="user" />
+          <user-card :user="user"/>
         </el-col>
 
         <el-col :span="18" :xs="24">
           <el-card>
             <router-link :to="'/profile/createActivity'">
-              <el-button ><i class="el-icon-plus"></i>添加动态</el-button>
+              <el-button><i class="el-icon-plus"></i>添加动态</el-button>
             </router-link>
             <el-tabs v-model="activeTab">
               <el-tab-pane label="Activity" name="activity">
-                <activity />
+                <activity/>
               </el-tab-pane>
-<!--              <el-tab-pane label="Timeline" name="timeline">-->
-<!--                <timeline />-->
-<!--              </el-tab-pane>-->
+              <!--              <el-tab-pane label="Timeline" name="timeline">-->
+              <!--                <timeline />-->
+              <!--              </el-tab-pane>-->
               <el-tab-pane label="Account" name="account">
-                <account :user="user" />
+                <account :user="user"/>
               </el-tab-pane>
             </el-tabs>
 
           </el-card>
         </el-col>
 
-<!--        <el-col :span="6" :xs="24">-->
-<!--          <user-card :user="user" />-->
-<!--        </el-col>-->
+        <!--        <el-col :span="6" :xs="24">-->
+        <!--          <user-card :user="user" />-->
+        <!--        </el-col>-->
 
       </el-row>
     </div>
@@ -37,40 +37,41 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import UserCard from './components/UserCard'
-import Activity from './components/Activity'
-import Timeline from './components/Timeline'
-import Account from './components/Account'
+    import {mapGetters} from 'vuex'
+    import UserCard from './components/UserCard'
+    import Activity from './components/Activity'
+    import Timeline from './components/Timeline'
+    import Account from './components/Account'
 
-export default {
-  name: 'Profile',
-  components: { UserCard, Activity, Timeline, Account },
-  data() {
-    return {
-      user: {},
-      activeTab: 'activity'
+    export default {
+        name: 'Profile',
+        components: {UserCard, Activity, Timeline, Account},
+        data() {
+            return {
+                user: {},
+                activeTab: 'activity'
+            }
+        },
+        computed: {
+            ...mapGetters([
+                'name',
+                'avatar',
+                'roles',
+                'userId'
+            ])
+        },
+        created() {
+            this.getUser()
+        },
+        methods: {
+            getUser() {
+                this.user = {
+                    name: this.name,
+                    role: this.roles.join(' | '),
+                    avatar: this.avatar,
+                    userId: this.userId
+                };
+            }
+        }
     }
-  },
-  computed: {
-    ...mapGetters([
-      'name',
-      'avatar',
-      'roles'
-    ])
-  },
-  created() {
-    this.getUser()
-  },
-  methods: {
-    getUser() {
-      this.user = {
-        name: this.name,
-        role: this.roles.join(' | '),
-        email: 'admin@test.com',
-        avatar: this.avatar
-      }
-    }
-  }
-}
 </script>
