@@ -14,7 +14,7 @@
             </router-link>
             <el-tabs v-model="activeTab">
               <el-tab-pane label="Activity" name="activity">
-                <activity/>
+                <activity :user="user"/>
               </el-tab-pane>
               <!--              <el-tab-pane label="Timeline" name="timeline">-->
               <!--                <timeline />-->

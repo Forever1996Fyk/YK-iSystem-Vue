@@ -1,8 +1,8 @@
 <template>
   <div class="createPost-container">
-    <el-form ref="postForm" :model="postForm" class="form-container">
+    <el-form ref="formData" :model="formData" class="form-container">
       <sticky :z-index="10" :class-name="'sub-navbar'">
-        <el-button style="margin-left: 10px;" type="success">
+        <el-button style="margin-left: 10px;" type="success" @click="addSave">
           保存
         </el-button>
         <router-link :to="'/profile/index'">
@@ -14,7 +14,7 @@
       <div class="createPost-main-container">
 
         <el-form-item prop="content" style="margin-bottom: 30px;">
-          <Tinymce ref="editor" v-model="postForm.content" :height="400" :isOpenPic="false" :isOpenVid="false"/>
+          <Tinymce ref="editor" v-model="formData.content" :height="400" :isOpenPic="false" :isOpenVid="false"/>
         </el-form-item>
 
         <el-form-item prop="articleCover" style="margin-bottom: 30px;">
@@ -51,21 +51,14 @@
     import { getToken } from '@/utils/auth'
     import bucket from '@/config/bucket'
     import config from '@/config'
+    import {
+        addUserActivity,
+    } from '@/api/userActivity'
 
-    const defaultForm = {
-        status: 2,
-        title: '', // 文章题目
-        content: '', // 文章内容
-        articleSummary: '', // 文章摘要
-        source_uri: '', // 文章外链
-        articleCover: '', // 文章图片id
-        articleCoverUrl: '', // 文章图片Url
-        id: undefined,
-        platforms: [],
-        comment: true,
-        importance: 0,
-        publishTime: ''
-    }
+    const defaultData = {
+        content: null,
+        activityImg: null
+    };
 
     export default {
         name: 'CreateActivity',
@@ -80,7 +73,8 @@
                 file: '',
                 url: config.apiUrl.dev + '/fileupload/api/oss/uploadOSS',
                 param: bucket.bucketPubR,
-                postForm: defaultForm
+                formData: Object.assign({}, defaultData),
+                activityImgList: [],
             }
         },
         methods: {
@@ -91,6 +85,8 @@
                     if (this.listObj[objKeyArr[i]].uid === uid) {
                         this.listObj[objKeyArr[i]].url = response.data.attachUrl
                         this.listObj[objKeyArr[i]].hasSuccess = true
+
+                        this.activityImgList.push(response.data.id);
                         return
                     }
                 }
@@ -123,6 +119,24 @@
                     }
 
                     resolve(true)
+                })
+            },
+            addSave() {
+                console.log(this.formData);
+                if (!this.formData.content && this.activityImgList.length === 0) {
+                    this.$message.warning('必须要填写内容或者上传至少一张图片');
+                    return;
+                }
+
+                if (this.activityImgList.length !== 0) {
+                    this.formData.activityImg = this.activityImgList.join(",");
+                }
+
+                addUserActivity(this.formData).then((res) => {
+                    this.$message.success(res.message);
+                    this.formData.content = null;
+                    this.formData.activityImg = null;
+                    this.fileList = [];
                 })
             }
         }

@@ -189,7 +189,11 @@
             changeSkillsSlider(item) {
                 console.log(item);
                 if (item.skillsSlider === 0) {
-                    this.formData.skillsList.pop(item);
+                    for (var i = 0; i < this.formData.skillsList.length; i++) {
+                        if (this.formData.skillsList[i].skillsName === item.skillsName) {
+                            this.formData.skillsList.splice(i, 1);
+                        }
+                    }
                 }
                 this.save();
             },

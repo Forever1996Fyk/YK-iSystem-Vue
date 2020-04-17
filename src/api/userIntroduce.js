@@ -10,7 +10,7 @@ import request from '@/utils/request'
  */
 export function addUserIntroduce(data) {
   return request({
-    url: '/base/api/userIntroduce/addUserIntroduce',
+    url: '/admin/api/userIntroduce/addUserIntroduce',
     method: 'post',
     data
   })
@@ -23,7 +23,7 @@ export function addUserIntroduce(data) {
  */
 export function getUserIntroduceById(id) {
   return request({
-    url: '/base/api/userIntroduce/getUserIntroduceById',
+    url: '/admin/api/userIntroduce/getUserIntroduceById',
     method: 'get',
     params: { id }
   })
@@ -35,7 +35,7 @@ export function getUserIntroduceById(id) {
  */
 export function editUserIntroduce(data) {
   return request({
-    url: '/base/api/userIntroduce/editUserIntroduce',
+    url: '/admin/api/userIntroduce/editUserIntroduce',
     method: 'put',
     data
   })
@@ -47,7 +47,7 @@ export function editUserIntroduce(data) {
  */
 export function delUserIntroduce(id) {
   return request({
-    url: '/base/api/userIntroduce/delUserIntroduce',
+    url: '/admin/api/userIntroduce/delUserIntroduce',
     method: 'delete',
     params: { id }
   })
@@ -59,7 +59,7 @@ export function delUserIntroduce(id) {
  */
 export function delUserIntroduceByIds(ids) {
   return request({
-    url: '/base/api/userIntroduce/delUserIntroduce/' + ids,
+    url: '/admin/api/userIntroduce/delUserIntroduce/' + ids,
     method: 'delete'
   })
 }
@@ -71,7 +71,7 @@ export function delUserIntroduceByIds(ids) {
  */
 export function getUserIntroducesNoPage(data) {
   return request({
-    url: '/base/api/userIntroduce/getUserIntroduces/noPage',
+    url: '/admin/api/userIntroduce/getUserIntroduces/noPage',
     method: 'get',
     params: data
   })
@@ -84,7 +84,7 @@ export function getUserIntroducesNoPage(data) {
  */
 export function getUserIntroduces(data) {
   return request({
-    url: '/base/api/userIntroduce/getUserIntroduces',
+    url: '/admin/api/userIntroduce/getUserIntroduces',
     method: 'get',
     params: data
   })

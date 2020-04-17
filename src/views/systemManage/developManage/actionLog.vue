@@ -264,7 +264,6 @@
             getList() {
                 this.listLoading = true;
                 getActionLogs(this.listQuery).then(res => {
-                    console.log(res);
                     this.list = res.data.data;
                     this.total = res.data.total;
 
