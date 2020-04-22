@@ -36,12 +36,10 @@ const mutations = {
    *
    */
   SOCKET_ONOPEN() {
-
     console.log("连接建立....");
+    ChatMessageContent.prototype = new MessageContent();
     //连接成功就发送一条连接消息
-    Inherit(ChatMessageContent, MessageContent);
-    var messageContent = new MessageContent(action.CONNECT, msgType.SINGLE_CHAT);
-    var chatMessageContent = new ChatMessageContent(localStorage.getItem('userId'), null, null, null, null);
+    var chatMessageContent = new ChatMessageContent(action.CONNECT, msgType.SINGLE_CHAT, localStorage.getItem('userId'), null, null, null, null);
     this.SOCKET_SEND(chatMessageContent);
     console.log("连接成功....");
   },
