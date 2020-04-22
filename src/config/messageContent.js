@@ -20,6 +20,7 @@ const msgType = {
   SYSTEM_MESSAGE: 'system_message',
   NOTICE_MESSAGE: 'notice_message',
 }
+
 /**
  * 通用消息内容实体
  * @param action
