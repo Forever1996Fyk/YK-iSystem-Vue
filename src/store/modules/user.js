@@ -70,6 +70,10 @@ const actions = {
         commit('SET_AVATAR', userIconUrl)
         commit('SET_INTRODUCTION', nickName)
         commit('SET_USERID', userId)
+
+        localStorage.setItem("userId", userId);
+        localStorage.setItem("userName", username);
+        localStorage.setItem("userIconUrl", userIconUrl);
         resolve(data)
       }).catch(error => {
         reject(error)

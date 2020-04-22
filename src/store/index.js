@@ -7,6 +7,7 @@ import errorLog from "@/store/modules/errorLog";
 import permission from "@/store/modules/permission";
 import tagsView from "@/store/modules/tagsView";
 import settings from "@/store/modules/settings";
+import socket from "@/store/modules/socket";
 
 Vue.use(Vuex)
 
@@ -39,7 +40,8 @@ const store = new Vuex.Store({
     errorLog,
     permission,
     tagsView,
-    settings
+    settings,
+    socket
   },
   getters
 })

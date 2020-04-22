@@ -50,7 +50,8 @@ export default {
     logOut: '退出登录',
     profile: '个人中心',
     theme: '换肤',
-    size: '布局大小'
+    size: '布局大小',
+    updatePwd: '修改密码'
   },
   login: {
     title: '系统登录',
