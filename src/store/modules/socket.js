@@ -1,7 +1,6 @@
 /**
  * Created by YuKai Fan on 2020/4/22
  */
-import {ChatMessageContent, Inherit, MessageContent, action, msgType} from '@/config/messageContent'
 import config from '@/config'
 
 const state = {
@@ -21,13 +20,14 @@ const mutations = {
    */
   SOCKET_INIT(state) {
     if (window.WebSocket) {
-      if (this.SOCKET_CHECK) {
+      if (!mutations.SOCKET_CHECK) {
         return false;
       }
     }
     state.webSocket = new WebSocket(config.webSocketUrl.dev);
     state.webSocket.onopen = mutations.SOCKET_ONOPEN;
     state.webSocket.onclose = mutations.SOCKET_ONCLOSE;
+    // state.webSocket.onmessage = mutations.SOCKET_ONMESSAGE;
     state.webSocket.onerror = mutations.SOCKET_ONERROR;
   },
   /**
@@ -37,10 +37,14 @@ const mutations = {
    */
   SOCKET_ONOPEN() {
     console.log("连接建立....");
-    ChatMessageContent.prototype = new MessageContent();
     //连接成功就发送一条连接消息
-    var chatMessageContent = new ChatMessageContent(action.CONNECT, msgType.SINGLE_CHAT, localStorage.getItem('userId'), null, null, null, null);
-    this.SOCKET_SEND(chatMessageContent);
+    console.log(config.action.CONNECT)
+    var chatMessageContent = {
+      action: config.action.CONNECT,
+      msgType:  config.msgType.SINGLE_CHAT,
+      senderId: localStorage.getItem('account'),
+    };
+    mutations.SOCKET_SEND(chatMessageContent);
     console.log("连接成功....");
   },
   /**
@@ -53,12 +57,16 @@ const mutations = {
   },
 
   SOCKET_ONCLOSE(e) {
+    state.webSocket.close();
     console.log("连接关闭....");
   },
 
   SOCKET_ONERROR(e) {
     console.error("连接出错。。。");
   },
+  SOCKET_ONMESSAGE(msg) {
+    const data = JSON.parse(msg.data);
+  }
 };
 
 const actions = {
@@ -67,6 +75,9 @@ const actions = {
   },
   send({commit}) {
     commit('SOCKET_SEND');
+  },
+  close({commit}) {
+    commit('SOCKET_ONCLOSE');
   }
 };
 

@@ -22,6 +22,8 @@ import * as filters from './filters' // global filters
 
 import VueCron from 'vue-cron'
 
+import config from '@/config'
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api

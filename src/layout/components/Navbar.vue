@@ -128,9 +128,12 @@
                 this.$store.dispatch('app/toggleSideBar')
             },
             async logout() {
-                await this.$store.dispatch('user/logout')
+                await this.$store.dispatch('user/logout');
+                // await this.$store.dispatch('socket/close');
+                await this.$store.getters.webSocket.onclose();
                 this.$router.push(`/login?redirect=${this.$route.fullPath}`)
             },
+
             handleCommand(type) {
                 if ('updatePwd' === type) {
                     this.dialogFormVisible = true;
