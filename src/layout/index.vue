@@ -20,6 +20,7 @@
     import {AppMain, Navbar, Settings, Sidebar, TagsView} from './components'
     import ResizeMixin from './mixin/ResizeHandler'
     import {mapState} from 'vuex'
+    import { removeToken } from '@/utils/auth'
 
     export default {
         name: 'Layout',
@@ -72,10 +73,11 @@
                             showCancelButton: false,
                             beforeClose: (action, instance, done) => {
                                 done();
-                                this.$store.dispatch('user/logout');
                                 // await this.$store.dispatch('socket/close');
+                                removeToken();
                                 this.$store.getters.webSocket.onclose();
-                                this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+                                window.location.reload();
+                                // this.$router.push(`/login?redirect=${this.$route.fullPath}`)
                             }
                         });
                     }

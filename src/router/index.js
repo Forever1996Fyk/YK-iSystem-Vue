@@ -259,7 +259,29 @@ export const asyncRoutes = [
       },
     ]
   },
-  workflowRouter
+  workflowRouter,
+  // {
+  //   path: '/components',
+  //   component: Layout,
+  //   redirect: '/components/hotNews',
+  //   alwaysShow: true,
+  //   name: 'Components',
+  //   meta: {
+  //     title: 'Components',
+  //     roles: ['admin']
+  //   },
+  //   children: [
+  //     {
+  //       path: 'hotNews',
+  //       component: () => import('@/views/components/hotNews'),
+  //       name: 'hotNews',
+  //       meta: {
+  //         title: 'hotNews',
+  //         roles: ['admin']
+  //       }
+  //     }
+  //   ]
+  // },
   // {
   //   path: '/workflowManage',
   //   component: Layout,
